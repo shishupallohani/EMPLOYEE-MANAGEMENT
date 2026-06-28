@@ -15,9 +15,9 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(0, 0, 0, 0.6);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
+			background: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(8px);
+			-webkit-backdrop-filter: blur(8px);
 			z-index: 9999;
 			justify-content: center;
 			align-items: center;
@@ -176,6 +176,40 @@
 			background: #e0e0e0;
 		}
 
+		/* ===== TOAST MESSAGE ===== */
+		.toast-message {
+			position: fixed;
+			top: 30px;
+			right: 30px;
+			background: #28a745;
+			color: white;
+			padding: 16px 30px;
+			border-radius: 12px;
+			font-size: 16px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			z-index: 99999;
+			display: none;
+			align-items: center;
+			gap: 12px;
+			animation: slideInRight 0.5s ease;
+		}
+
+		.toast-message.show {
+			display: flex;
+		}
+
+		@keyframes slideInRight {
+			from {
+				transform: translateX(100px);
+				opacity: 0;
+			}
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+
 		/* ===== RESPONSIVE ===== */
 		@media (max-width: 576px) {
 			.modal-box {
@@ -193,10 +227,24 @@
 			.modal-buttons .btn-cancel {
 				flex: 1;
 			}
+
+			.toast-message {
+				top: 20px;
+				right: 20px;
+				left: 20px;
+				padding: 14px 20px;
+				font-size: 14px;
+			}
 		}
 	</style>
 </head>
 <body>
+
+<!-- ===== TOAST MESSAGE ===== -->
+<div class="toast-message" id="toastMessage">
+	<i class="fas fa-check-circle" style="font-size: 22px;"></i>
+	<span id="toastText">Employee saved successfully!</span>
+</div>
 
 <!-- ===== MODAL ===== -->
 <div class="modal-overlay active" id="employeeModal">
@@ -261,6 +309,19 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+	// ===== TOAST FUNCTION =====
+	function showToast(message) {
+		var toast = document.getElementById('toastMessage');
+		var toastText = document.getElementById('toastText');
+		toastText.textContent = message;
+		toast.className = 'toast-message show';
+
+		setTimeout(function() {
+			toast.className = 'toast-message';
+		}, 3000);
+	}
+
+	// ===== CLOSE MODAL =====
 	function closeModalAndRedirect() {
 		window.location.href = '/';
 	}
@@ -278,6 +339,31 @@
 		if (e.key === 'Escape') {
 			closeModalAndRedirect();
 		}
+	});
+
+	// ===== FORM SUBMIT - AJAX =====
+	$('#employeeForm').on('submit', function(e) {
+		e.preventDefault();
+
+		var formData = $(this).serialize();
+
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'POST',
+			data: formData,
+			success: function() {
+				// Show toast
+				showToast('✅ Employee saved successfully!');
+
+				// Close modal after 1 second
+				setTimeout(function() {
+					window.location.href = '/';
+				}, 1000);
+			},
+			error: function() {
+				showToast('❌ Error saving employee!');
+			}
+		});
 	});
 </script>
 
