@@ -7,6 +7,127 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 	<style>
+		/* ===== RESET ===== */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			overflow: hidden;
+		}
+
+		/* ===== BACKGROUND CONTENT ===== */
+		.background-content {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 0;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			overflow: hidden;
+		}
+
+		/* ===== FLOATING BUBBLES ===== */
+		.bubble {
+			position: absolute;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.1);
+			animation: float 8s ease-in-out infinite;
+		}
+
+		.bubble:nth-child(1) {
+			width: 120px;
+			height: 120px;
+			top: 10%;
+			left: 5%;
+			animation-delay: 0s;
+		}
+
+		.bubble:nth-child(2) {
+			width: 80px;
+			height: 80px;
+			top: 60%;
+			right: 10%;
+			animation-delay: 2s;
+		}
+
+		.bubble:nth-child(3) {
+			width: 200px;
+			height: 200px;
+			bottom: 10%;
+			left: 20%;
+			animation-delay: 4s;
+		}
+
+		.bubble:nth-child(4) {
+			width: 60px;
+			height: 60px;
+			top: 20%;
+			right: 25%;
+			animation-delay: 1s;
+		}
+
+		.bubble:nth-child(5) {
+			width: 150px;
+			height: 150px;
+			bottom: 30%;
+			right: 5%;
+			animation-delay: 3s;
+		}
+
+		.bubble:nth-child(6) {
+			width: 100px;
+			height: 100px;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			animation-delay: 5s;
+		}
+
+		@keyframes float {
+			0%, 100% {
+				transform: translateY(0) scale(1) rotate(0deg);
+			}
+			50% {
+				transform: translateY(-30px) scale(1.05) rotate(10deg);
+			}
+		}
+
+		/* ===== CENTER TEXT ===== */
+		.center-text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			color: rgba(255, 255, 255, 0.08);
+			font-size: 48px;
+			font-weight: 700;
+			letter-spacing: 2px;
+			user-select: none;
+			pointer-events: none;
+			z-index: 1;
+		}
+
+		.center-text i {
+			font-size: 80px;
+			display: block;
+			margin-bottom: 15px;
+			color: rgba(255, 255, 255, 0.06);
+		}
+
+		.center-text .sub-text {
+			font-size: 16px;
+			font-weight: 300;
+			letter-spacing: 5px;
+			color: rgba(255, 255, 255, 0.05);
+			margin-top: 10px;
+		}
+
 		/* ===== MODAL OVERLAY ===== */
 		.modal-overlay {
 			display: none;
@@ -15,9 +136,9 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(0, 0, 0, 0.5);
-			backdrop-filter: blur(8px);
-			-webkit-backdrop-filter: blur(8px);
+			background: rgba(0, 0, 0, 0.4);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
 			z-index: 9999;
 			justify-content: center;
 			align-items: center;
@@ -29,23 +150,27 @@
 
 		/* ===== MODAL BOX ===== */
 		.modal-box {
-			background: white;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
 			border-radius: 24px;
 			padding: 40px 45px;
 			max-width: 500px;
 			width: 95%;
-			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 			position: relative;
 			animation: slideUp 0.4s ease;
+			z-index: 1;
+			border: 1px solid rgba(255, 255, 255, 0.2);
 		}
 
 		@keyframes slideUp {
 			from {
-				transform: translateY(40px);
+				transform: translateY(40px) scale(0.95);
 				opacity: 0;
 			}
 			to {
-				transform: translateY(0);
+				transform: translateY(0) scale(1);
 				opacity: 1;
 			}
 		}
@@ -56,7 +181,7 @@
 			top: 12px;
 			right: 18px;
 			font-size: 26px;
-			color: #aaa;
+			color: #999;
 			cursor: pointer;
 			background: none;
 			border: none;
@@ -72,12 +197,12 @@
 		.modal-title {
 			font-size: 24px;
 			font-weight: 700;
-			color: #1a237e;
+			color: #2d3748;
 			margin-bottom: 22px;
 		}
 
 		.modal-title i {
-			color: #0d47a1;
+			color: #667eea;
 			margin-right: 10px;
 		}
 
@@ -88,7 +213,7 @@
 
 		.form-group label {
 			font-weight: 600;
-			color: #333;
+			color: #4a5568;
 			font-size: 14px;
 			display: block;
 			margin-bottom: 4px;
@@ -98,27 +223,27 @@
 		.form-group select {
 			width: 100%;
 			padding: 11px 14px;
-			border: 2px solid #e0e0e0;
+			border: 2px solid #e2e8f0;
 			border-radius: 10px;
 			font-size: 15px;
-			background: #f8f9fa;
+			background: rgba(255, 255, 255, 0.8);
 			transition: 0.3s;
 			box-sizing: border-box;
 		}
 
 		.form-group input:focus,
 		.form-group select:focus {
-			border-color: #1a237e;
+			border-color: #667eea;
 			outline: none;
 			background: white;
-			box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+			box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
 		}
 
-		/* ===== DROPDOWN FIX ===== */
+		/* ===== DROPDOWN ===== */
 		.form-group select {
 			appearance: none;
 			-webkit-appearance: none;
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
 			background-repeat: no-repeat;
 			background-position: right 14px center;
 			background-size: 12px;
@@ -144,7 +269,7 @@
 		.modal-buttons .btn-save {
 			flex: 1;
 			padding: 13px;
-			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			background: linear-gradient(135deg, #667eea, #764ba2);
 			color: white;
 			border: none;
 			border-radius: 12px;
@@ -156,14 +281,14 @@
 
 		.modal-buttons .btn-save:hover {
 			transform: translateY(-2px);
-			box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+			box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 		}
 
 		.modal-buttons .btn-cancel {
 			flex: 0.5;
 			padding: 13px;
-			background: #f0f0f0;
-			color: #555;
+			background: rgba(0, 0, 0, 0.05);
+			color: #4a5568;
 			border: none;
 			border-radius: 12px;
 			font-size: 16px;
@@ -173,21 +298,21 @@
 		}
 
 		.modal-buttons .btn-cancel:hover {
-			background: #e0e0e0;
+			background: rgba(0, 0, 0, 0.1);
 		}
 
-		/* ===== TOAST MESSAGE ===== */
+		/* ===== TOAST ===== */
 		.toast-message {
 			position: fixed;
 			top: 30px;
 			right: 30px;
-			background: #28a745;
+			background: linear-gradient(135deg, #48bb78, #38a169);
 			color: white;
 			padding: 16px 30px;
 			border-radius: 12px;
 			font-size: 16px;
 			font-weight: 600;
-			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
 			z-index: 99999;
 			display: none;
 			align-items: center;
@@ -235,12 +360,43 @@
 				padding: 14px 20px;
 				font-size: 14px;
 			}
+
+			.center-text {
+				font-size: 28px;
+			}
+
+			.center-text i {
+				font-size: 50px;
+			}
+
+			.bubble:nth-child(3),
+			.bubble:nth-child(5) {
+				display: none;
+			}
 		}
 	</style>
 </head>
 <body>
 
-<!-- ===== TOAST MESSAGE ===== -->
+<!-- ===== BACKGROUND CONTENT ===== -->
+<div class="background-content">
+	<!-- Floating Bubbles -->
+	<div class="bubble"></div>
+	<div class="bubble"></div>
+	<div class="bubble"></div>
+	<div class="bubble"></div>
+	<div class="bubble"></div>
+	<div class="bubble"></div>
+
+	<!-- Center Text -->
+	<div class="center-text">
+		<i class="fas fa-users"></i>
+		Employee Management
+		<div class="sub-text">Chandigarh University</div>
+	</div>
+</div>
+
+<!-- ===== TOAST ===== -->
 <div class="toast-message" id="toastMessage">
 	<i class="fas fa-check-circle" style="font-size: 22px;"></i>
 	<span id="toastText">Employee saved successfully!</span>
@@ -309,7 +465,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	// ===== TOAST FUNCTION =====
+	// ===== TOAST =====
 	function showToast(message) {
 		var toast = document.getElementById('toastMessage');
 		var toastText = document.getElementById('toastText');
@@ -341,21 +497,16 @@
 		}
 	});
 
-	// ===== FORM SUBMIT - AJAX =====
+	// ===== FORM SUBMIT =====
 	$('#employeeForm').on('submit', function(e) {
 		e.preventDefault();
-
-		var formData = $(this).serialize();
 
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'POST',
-			data: formData,
+			data: $(this).serialize(),
 			success: function() {
-				// Show toast
 				showToast('✅ Employee saved successfully!');
-
-				// Close modal after 1 second
 				setTimeout(function() {
 					window.location.href = '/';
 				}, 1000);
