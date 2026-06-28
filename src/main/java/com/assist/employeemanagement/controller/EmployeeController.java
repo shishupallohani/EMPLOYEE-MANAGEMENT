@@ -28,7 +28,7 @@ public class EmployeeController {
 		Map<String, Long> locationCounts = employeeService.getEmployeeCountByLocation();
 		model.addAttribute("locationCounts", locationCounts);
 
-		// Pagination ke liye
+		// for Pagination
 		return findPaginated(1, "firstName", "asc", model);
 	}
 	
