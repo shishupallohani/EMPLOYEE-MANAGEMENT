@@ -18,6 +18,13 @@ public class Employee {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name="location")
+    private String location;
+
+
+
+    @OneToOne(cascade = CascadeType.ALL)
     public long getId() {
         return id;
     }
@@ -41,6 +48,12 @@ public class Employee {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getLocation() {
+        return location;
+    }
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
 
