@@ -16,4 +16,7 @@ public interface EmployeeService {
 
 	// Location wise employee count
 	Map<String, Long> getEmployeeCountByLocation();
+
+	// Location wise employees list
+	List<Employee> getEmployeesByLocation(String location);
 }

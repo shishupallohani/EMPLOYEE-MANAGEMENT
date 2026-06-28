@@ -19,4 +19,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
     // Specific location count
     Long countByLocation(String location);
 
+    // Location wise employees (Case Insensitive)
+    @Query("SELECT e FROM Employee e WHERE UPPER(e.location) = UPPER(:location)")
+    List<Employee> findByLocationIgnoreCase(@Param("location") String location);
+
 }

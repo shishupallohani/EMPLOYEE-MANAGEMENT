@@ -46,6 +46,20 @@ public class EmployeeController {
 		employeeService.saveEmployee(employee);
 		return "redirect:/";
 	}
+
+
+	//Location wise employees
+	@GetMapping("/location/{locationName}")
+	public String getEmployeesByLocation(@PathVariable String locationName, Model model) {
+		// Fetch employees for this location
+		List<Employee> employees = employeeService.getEmployeesByLocation(locationName);
+
+		// Add to model
+		model.addAttribute("locationName", locationName);
+		model.addAttribute("employees", employees);
+
+		return "location_employees";
+	}
 	
 	@GetMapping("/showFormForUpdate/{id}")
 	public String showFormForUpdate(@PathVariable ( value = "id") long id, Model model) {

@@ -72,4 +72,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return locationCountMap;
 	}
+
+	@Override
+	public List<Employee> getEmployeesByLocation(String location) {
+		return employeeRepository.findByLocationIgnoreCase(location);
+	}
 }
