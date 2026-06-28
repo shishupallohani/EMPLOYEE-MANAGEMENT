@@ -1,36 +1,449 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>Employee Management System</title>
+	<meta charset="UTF-8">
+	<title>Update Employee</title>
+	<link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
 
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+		body {
+			background: #f0f2f5;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			min-height: 100vh;
+		}
+
+		.main-header {
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			color: white;
+			padding: 15px 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			width: 100%;
+		}
+
+		.header-left {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		.header-left .logo-icon {
+			width: 50px;
+			height: 50px;
+			background: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 28px;
+			color: #1a237e;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+		}
+
+		.header-left .brand-text {
+			font-size: 28px;
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.header-left .brand-sub {
+			font-size: 12px;
+			opacity: 0.8;
+			display: block;
+			font-weight: 300;
+		}
+
+		.header-right {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		.header-right .university-logo {
+			width: 50px;
+			height: 50px;
+			background: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 24px;
+			color: #1a237e;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+		}
+
+		.header-right .university-text {
+			font-size: 16px;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+		}
+
+		.header-right .university-sub {
+			font-size: 11px;
+			opacity: 0.8;
+			display: block;
+			font-weight: 300;
+		}
+
+		.form-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: calc(100vh - 80px);
+			padding: 20px;
+		}
+
+		.form-container {
+			background: white;
+			border-radius: 16px;
+			padding: 40px 45px;
+			max-width: 550px;
+			width: 100%;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+		}
+
+		.form-container .form-title {
+			font-size: 24px;
+			font-weight: 700;
+			color: #1a237e;
+			margin-bottom: 25px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding-bottom: 15px;
+			border-bottom: 3px solid #e8eaf6;
+		}
+
+		.form-container .form-title i {
+			color: #0d47a1;
+			font-size: 26px;
+		}
+
+		.form-group {
+			margin-bottom: 18px;
+		}
+
+		.form-group label {
+			font-weight: 600;
+			color: #4a5568;
+			font-size: 14px;
+			display: block;
+			margin-bottom: 5px;
+		}
+
+		.form-group label i {
+			color: #1a237e;
+			margin-right: 8px;
+			width: 18px;
+		}
+
+		.form-group input,
+		.form-group select {
+			width: 100%;
+			padding: 12px 16px;
+			border: 2px solid #e2e8f0;
+			border-radius: 10px;
+			font-size: 15px;
+			background: #f8f9fa;
+			transition: 0.3s;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus {
+			border-color: #1a237e;
+			outline: none;
+			background: white;
+			box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+		}
+
+		.form-group select {
+			appearance: none;
+			-webkit-appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a237e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right 14px center;
+			background-size: 12px;
+			padding-right: 38px;
+			cursor: pointer;
+		}
+
+		.form-actions {
+			display: flex;
+			gap: 12px;
+			margin-top: 25px;
+		}
+
+		.btn-update {
+			flex: 1;
+			padding: 12px 20px;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: 0.3s;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.btn-update:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+		}
+
+		.btn-cancel {
+			flex: 0.5;
+			padding: 12px 20px;
+			background: #e2e8f0;
+			color: #4a5568;
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: 0.3s;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.btn-cancel:hover {
+			background: #cbd5e0;
+			text-decoration: none;
+			color: #4a5568;
+		}
+
+		.toast-message {
+			position: fixed;
+			top: 30px;
+			right: 30px;
+			background: #28a745;
+			color: white;
+			padding: 14px 28px;
+			border-radius: 12px;
+			font-size: 15px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			z-index: 99999;
+			display: none;
+			align-items: center;
+			gap: 12px;
+			animation: slideInRight 0.5s ease;
+		}
+
+		.toast-message.show {
+			display: flex;
+		}
+
+		.toast-message.error {
+			background: #dc3545;
+			box-shadow: 0 8px 30px rgba(220, 53, 69, 0.4);
+		}
+
+		@keyframes slideInRight {
+			from {
+				transform: translateX(100px);
+				opacity: 0;
+			}
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.main-header {
+				flex-direction: column;
+				text-align: center;
+				padding: 12px 15px;
+			}
+
+			.header-left .brand-text {
+				font-size: 20px;
+			}
+
+			.header-right .university-text {
+				font-size: 14px;
+			}
+
+			.form-wrapper {
+				padding: 15px;
+				min-height: calc(100vh - 120px);
+			}
+
+			.form-container {
+				padding: 25px 20px;
+			}
+
+			.form-container .form-title {
+				font-size: 20px;
+			}
+
+			.form-actions {
+				flex-direction: column;
+			}
+
+			.btn-update,
+			.btn-cancel {
+				width: 100%;
+			}
+
+			.toast-message {
+				top: 20px;
+				right: 20px;
+				left: 20px;
+				padding: 12px 18px;
+				font-size: 14px;
+			}
+		}
+	</style>
 </head>
 <body>
-	<div class="container">
-		<h1>Employee Management System</h1>
-		<hr>
-		<h2>Update Employee</h2>
 
-		<form action="#" th:action="@{/saveEmployee}" th:object="${employee}"
-			method="POST">
-			
-			<!-- Add hidden form field to handle update -->
-			<input type="hidden" th:field="*{id}" />
-			
-			<input type="text" th:field="*{firstName}" class="form-control mb-4 col-4">
-				
-				<input type="text" th:field="*{lastName}" class="form-control mb-4 col-4">
-				
-				<input type="text" th:field="*{email}" class="form-control mb-4 col-4">
-				
-				<button type="submit" class="btn btn-info col-2"> Update Employee</button>
-		</form>
-		
-		<hr>
-		
-		<a th:href = "@{/}"> Back to Employee List</a>
+<!-- ===== HEADER ===== -->
+<header class="main-header">
+	<div class="header-left">
+		<div class="logo-icon">👥</div>
+		<div>
+			<span class="brand-text">Employee Management System</span>
+			<span class="brand-sub">Manage your workforce efficiently</span>
+		</div>
 	</div>
+	<div class="header-right">
+		<div class="university-logo">🏛️</div>
+		<div>
+			<span class="university-text">Chandigarh University</span>
+			<span class="university-sub">Department of Computer Science</span>
+		</div>
+	</div>
+</header>
+
+<!-- ===== FORM ===== -->
+<div class="form-wrapper">
+	<div class="form-container">
+
+		<div class="form-title">
+			<i class="fas fa-user-edit"></i> Update Employee
+		</div>
+
+		<form id="updateForm" th:action="@{/updateEmployee}" th:object="${employee}" method="POST">
+
+			<input type="hidden" th:field="*{id}">
+
+			<div class="form-group">
+				<label for="firstName"><i class="fas fa-user"></i> First Name</label>
+				<input type="text" id="firstName" th:field="*{firstName}"
+					   placeholder="Enter first name" required>
+			</div>
+
+			<div class="form-group">
+				<label for="lastName"><i class="fas fa-user"></i> Last Name</label>
+				<input type="text" id="lastName" th:field="*{lastName}"
+					   placeholder="Enter last name" required>
+			</div>
+
+			<div class="form-group">
+				<label for="email"><i class="fas fa-envelope"></i> Email</label>
+				<input type="email" id="email" th:field="*{email}"
+					   placeholder="Enter email" required>
+			</div>
+
+			<div class="form-group">
+				<label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+				<select id="location" th:field="*{location}" required>
+					<option value="">-- Select Location --</option>
+					<option value="NOIDA">NOIDA</option>
+					<option value="DELHI">DELHI</option>
+					<option value="AHAMDABAD">AHAMDABAD</option>
+					<option value="PUNE">PUNE</option>
+					<option value="MUMBAI">MUMBAI</option>
+					<option value="BANGLORE">BANGLORE</option>
+					<option value="CHENNAI">CHENNAI</option>
+					<option value="PATNA">PATNA</option>
+					<option value="GOA">GOA</option>
+					<option value="HYDERABAD">HYDERABAD</option>
+					<option value="KOLKATA">KOLKATA</option>
+					<option value="LUCKNOW">LUCKNOW</option>
+				</select>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn-update">
+					<i class="fas fa-save"></i> Update Employee
+				</button>
+				<a th:href="@{'/location/' + ${employee.location}}" class="btn-cancel">
+					<i class="fas fa-times"></i> Cancel
+				</a>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-message" id="toastMessage">
+	<i class="fas fa-check-circle"></i>
+	<span id="toastText">Employee updated successfully!</span>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	function showToast(message, isError = false) {
+		var toast = document.getElementById('toastMessage');
+		var toastText = document.getElementById('toastText');
+		toastText.textContent = message;
+		toast.className = 'toast-message show';
+		if (isError) {
+			toast.classList.add('error');
+		}
+
+		setTimeout(function() {
+			toast.className = 'toast-message';
+		}, 3000);
+	}
+
+	window.addEventListener('DOMContentLoaded', function() {
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.get('updated') === 'success') {
+			showToast('✅ Employee updated successfully!');
+		}
+	});
+
+	$('#updateForm').on('submit', function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'POST',
+			data: $(this).serialize(),
+			success: function() {
+				showToast('✅ Employee updated successfully!');
+				setTimeout(function() {
+					var location = $('#location').val();
+					window.location.href = '/location/' + location;
+				}, 1000);
+			},
+			error: function() {
+				showToast('❌ Error updating employee!', true);
+			}
+		});
+	});
+</script>
+
 </body>
 </html>
