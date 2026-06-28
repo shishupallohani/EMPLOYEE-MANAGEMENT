@@ -199,7 +199,7 @@
             background: #f8f9fa;
         }
 
-        /* ===== ACTION BUTTONS (3 buttons - compact) ===== */
+        /* ===== ACTION BUTTONS ===== */
         .action-buttons {
             display: flex;
             gap: 4px;
@@ -262,12 +262,139 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
+            cursor: pointer;
         }
 
         .btn-delete:hover {
             background: #c82333;
             color: white;
             text-decoration: none;
+        }
+
+        /* ===== DELETE MODAL ===== */
+        .delete-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .delete-modal-overlay.active {
+            display: flex;
+        }
+
+        .delete-modal-box {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 50px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .delete-icon {
+            width: 70px;
+            height: 70px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-size: 32px;
+            color: #dc3545;
+        }
+
+        .delete-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .delete-message {
+            color: #4a5568;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .delete-message-sub {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .delete-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .delete-btn-cancel {
+            padding: 12px 28px;
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .delete-btn-cancel:hover {
+            background: #cbd5e0;
+        }
+
+        .delete-btn-confirm {
+            padding: 12px 28px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .delete-btn-confirm:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
         }
 
         /* ===== EMPTY STATE ===== */
@@ -349,6 +476,10 @@
                 padding: 3px 8px;
                 font-size: 11px;
             }
+
+            .delete-modal-box {
+                padding: 30px 25px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -367,6 +498,20 @@
             .btn-delete {
                 padding: 2px 6px;
                 font-size: 10px;
+            }
+
+            .delete-title {
+                font-size: 20px;
+            }
+
+            .delete-buttons {
+                flex-direction: column;
+            }
+
+            .delete-btn-cancel,
+            .delete-btn-confirm {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -433,19 +578,17 @@
                 <td>
                     <div class="action-buttons">
                         <!-- View Button -->
-                        <a th:href="@{/viewEmployee/{id}(id=${emp.id})}"
-                           class="btn-view">
+                        <a th:href="@{/viewEmployee/{id}(id=${emp.id})}" class="btn-view">
                             <i class="fas fa-eye"></i> View
                         </a>
                         <!-- Update Button -->
-                        <a th:href="@{/showFormForUpdate/{id}(id=${emp.id})}"
-                           class="btn-update">
+                        <a th:href="@{/showFormForUpdate/{id}(id=${emp.id})}" class="btn-update">
                             <i class="fas fa-edit"></i> Update
                         </a>
-                        <!-- Delete Button -->
-                        <a th:href="@{/deleteEmployee/{id}(id=${emp.id})}"
+                        <!-- Delete Button - Fixed -->
+                        <a th:onclick="'openDeleteModal(' + ${emp.id} + ')'"
                            class="btn-delete"
-                           onclick="return confirm('Are you sure you want to delete this employee?')">
+                           style="cursor:pointer;">
                             <i class="fas fa-trash"></i> Delete
                         </a>
                     </div>
@@ -465,8 +608,76 @@
     </div>
 </div>
 
+<!-- ===== DELETE CONFIRMATION MODAL ===== -->
+<div class="delete-modal-overlay" id="deleteModal">
+    <div class="delete-modal-box">
+
+        <!-- Icon -->
+        <div class="delete-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <!-- Title -->
+        <h3 class="delete-title">Delete Employee</h3>
+
+        <!-- Message -->
+        <p class="delete-message">Are you sure you want to delete this employee?</p>
+        <p class="delete-message-sub">This action cannot be undone.</p>
+
+        <!-- Buttons -->
+        <div class="delete-buttons">
+            <button class="delete-btn-cancel" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="delete-btn-confirm" id="confirmDeleteBtn">
+                <i class="fas fa-check"></i> Delete
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+<script>
+    // ===== DELETE MODAL =====
+    let deleteEmployeeId = null;
+
+    function openDeleteModal(id) {
+        console.log('Delete modal opened for ID:', id);
+        deleteEmployeeId = id;
+        document.getElementById('deleteModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+        deleteEmployeeId = null;
+    }
+
+    // Close on outside click
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+
+    // Confirm Delete
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (deleteEmployeeId) {
+            window.location.href = '/deleteEmployee/' + deleteEmployeeId;
+        }
+    });
+</script>
 
 </body>
 </html>
