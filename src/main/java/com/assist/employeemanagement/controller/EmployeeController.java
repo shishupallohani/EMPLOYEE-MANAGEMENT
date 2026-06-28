@@ -1,6 +1,7 @@
 package com.assist.employeemanagement.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.assist.employeemanagement.model.Employee;
 import com.assist.employeemanagement.service.EmployeeService;
@@ -20,11 +21,15 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-	
-	// display list of employees
+
 	@GetMapping("/")
 	public String viewHomePage(Model model) {
-		return findPaginated(1, "firstName", "asc", model);		
+		// Location counts fetch karo
+		Map<String, Long> locationCounts = employeeService.getEmployeeCountByLocation();
+		model.addAttribute("locationCounts", locationCounts);
+
+		// Pagination ke liye
+		return findPaginated(1, "firstName", "asc", model);
 	}
 	
 	@GetMapping("/showNewEmployeeForm")
