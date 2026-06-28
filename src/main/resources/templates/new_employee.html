@@ -3,82 +3,147 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Add Employee</title>
-	<!-- CSS -->
-	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 	<style>
-		/* Agar CSS file load na ho toh inline CSS backup */
+		/* ===== MODAL OVERLAY ===== */
 		.modal-overlay {
-			display: none !important;
+			display: none;
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background: rgba(0,0,0,0.6);
-			backdrop-filter: blur(8px);
+			background: rgba(0, 0, 0, 0.6);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
 			z-index: 9999;
 			justify-content: center;
 			align-items: center;
 		}
+
 		.modal-overlay.active {
-			display: flex !important;
+			display: flex;
 		}
+
+		/* ===== MODAL BOX ===== */
 		.modal-box {
 			background: white;
 			border-radius: 24px;
-			padding: 40px 50px;
-			max-width: 520px;
-			width: 90%;
+			padding: 40px 45px;
+			max-width: 500px;
+			width: 95%;
+			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 			position: relative;
-			box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+			animation: slideUp 0.4s ease;
 		}
+
+		@keyframes slideUp {
+			from {
+				transform: translateY(40px);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+
+		/* ===== CLOSE BUTTON ===== */
 		.modal-close {
 			position: absolute;
-			top: 15px;
-			right: 20px;
-			font-size: 28px;
-			color: #999;
+			top: 12px;
+			right: 18px;
+			font-size: 26px;
+			color: #aaa;
 			cursor: pointer;
 			background: none;
 			border: none;
+			transition: 0.3s;
 		}
-		.modal-close:hover { color: #333; }
+
+		.modal-close:hover {
+			color: #333;
+			transform: rotate(90deg);
+		}
+
+		/* ===== TITLE ===== */
 		.modal-title {
-			font-size: 26px;
+			font-size: 24px;
 			font-weight: 700;
 			color: #1a237e;
-			margin-bottom: 25px;
+			margin-bottom: 22px;
 		}
-		.modal-title i { color: #0d47a1; }
-		.form-group { margin-bottom: 18px; }
+
+		.modal-title i {
+			color: #0d47a1;
+			margin-right: 10px;
+		}
+
+		/* ===== FORM ===== */
+		.form-group {
+			margin-bottom: 16px;
+		}
+
 		.form-group label {
 			font-weight: 600;
 			color: #333;
+			font-size: 14px;
 			display: block;
-			margin-bottom: 5px;
+			margin-bottom: 4px;
 		}
-		.form-group input, .form-group select {
+
+		.form-group input,
+		.form-group select {
 			width: 100%;
-			padding: 12px 16px;
+			padding: 11px 14px;
 			border: 2px solid #e0e0e0;
-			border-radius: 12px;
+			border-radius: 10px;
 			font-size: 15px;
+			background: #f8f9fa;
+			transition: 0.3s;
+			box-sizing: border-box;
 		}
-		.form-group input:focus, .form-group select:focus {
+
+		.form-group input:focus,
+		.form-group select:focus {
 			border-color: #1a237e;
 			outline: none;
+			background: white;
+			box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
 		}
+
+		/* ===== DROPDOWN FIX ===== */
+		.form-group select {
+			appearance: none;
+			-webkit-appearance: none;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: right 14px center;
+			background-size: 12px;
+			padding-right: 38px;
+			cursor: pointer;
+			min-height: 48px;
+		}
+
+		.form-group select option {
+			padding: 10px;
+			font-size: 15px;
+			background: white;
+			color: #333;
+		}
+
+		/* ===== BUTTONS ===== */
 		.modal-buttons {
 			display: flex;
 			gap: 12px;
-			margin-top: 25px;
+			margin-top: 22px;
 		}
+
 		.modal-buttons .btn-save {
 			flex: 1;
-			padding: 14px;
+			padding: 13px;
 			background: linear-gradient(135deg, #1a237e, #0d47a1);
 			color: white;
 			border: none;
@@ -86,13 +151,17 @@
 			font-size: 16px;
 			font-weight: 600;
 			cursor: pointer;
+			transition: 0.3s;
 		}
+
 		.modal-buttons .btn-save:hover {
 			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
 		}
+
 		.modal-buttons .btn-cancel {
 			flex: 0.5;
-			padding: 14px;
+			padding: 13px;
 			background: #f0f0f0;
 			color: #555;
 			border: none;
@@ -100,56 +169,69 @@
 			font-size: 16px;
 			font-weight: 600;
 			cursor: pointer;
+			transition: 0.3s;
 		}
+
 		.modal-buttons .btn-cancel:hover {
 			background: #e0e0e0;
 		}
+
+		/* ===== RESPONSIVE ===== */
 		@media (max-width: 576px) {
-			.modal-box { padding: 30px 25px; }
-			.modal-buttons { flex-direction: column; }
-			.modal-buttons .btn-cancel { flex: 1; }
+			.modal-box {
+				padding: 25px 20px;
+			}
+
+			.modal-title {
+				font-size: 20px;
+			}
+
+			.modal-buttons {
+				flex-direction: column;
+			}
+
+			.modal-buttons .btn-cancel {
+				flex: 1;
+			}
 		}
 	</style>
 </head>
 <body>
 
-<!-- MODAL - Active class se automatically open hoga -->
+<!-- ===== MODAL ===== -->
 <div class="modal-overlay active" id="employeeModal">
 	<div class="modal-box">
 
-		<!-- Close Button -->
 		<button class="modal-close" id="closeModalBtn">✕</button>
 
-		<!-- Title -->
 		<div class="modal-title">
 			<i class="fas fa-user-plus"></i> Add New Employee
 		</div>
 
-		<!-- Form -->
 		<form id="employeeForm" th:action="@{/saveEmployee}" th:object="${employee}" method="POST">
 
 			<div class="form-group">
 				<label for="firstName">First Name</label>
 				<input type="text" id="firstName" th:field="*{firstName}"
-					   placeholder="Enter first name" class="form-control" required>
+					   placeholder="Enter first name" required>
 			</div>
 
 			<div class="form-group">
 				<label for="lastName">Last Name</label>
 				<input type="text" id="lastName" th:field="*{lastName}"
-					   placeholder="Enter last name" class="form-control" required>
+					   placeholder="Enter last name" required>
 			</div>
 
 			<div class="form-group">
 				<label for="email">Email</label>
 				<input type="email" id="email" th:field="*{email}"
-					   placeholder="Enter email" class="form-control" required>
+					   placeholder="Enter email" required>
 			</div>
 
 			<div class="form-group">
 				<label for="location">Location</label>
-				<select id="location" th:field="*{location}" class="form-control" required>
-					<option value="">Select Location</option>
+				<select id="location" th:field="*{location}" required>
+					<option value="">-- Select Location --</option>
 					<option value="NOIDA">NOIDA</option>
 					<option value="DELHI">DELHI</option>
 					<option value="AHAMDABAD">AHAMDABAD</option>
@@ -177,10 +259,8 @@
 	</div>
 </div>
 
-<!-- SCRIPTS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	// ========== CLOSE MODAL AND REDIRECT ==========
 	function closeModalAndRedirect() {
 		window.location.href = '/';
 	}
@@ -188,24 +268,16 @@
 	document.getElementById('closeModalBtn').addEventListener('click', closeModalAndRedirect);
 	document.getElementById('cancelBtn').addEventListener('click', closeModalAndRedirect);
 
-	// Close on outside click
 	document.getElementById('employeeModal').addEventListener('click', function(e) {
 		if (e.target === this) {
 			closeModalAndRedirect();
 		}
 	});
 
-	// Close on ESC key
 	document.addEventListener('keydown', function(e) {
 		if (e.key === 'Escape') {
 			closeModalAndRedirect();
 		}
-	});
-
-	// Form submit - normal flow, redirect automatically ho jayega
-	$('#employeeForm').on('submit', function(e) {
-		// No need to prevent default - normal submit hoga
-		// Controller redirect / pe kar dega
 	});
 </script>
 
