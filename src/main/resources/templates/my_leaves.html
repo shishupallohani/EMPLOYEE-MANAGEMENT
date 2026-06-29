@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Leaves</title>
+    <link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-left .logo-icon {
+            width: 50px; height: 50px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: #1a237e;
+        }
+        .header-left .brand-text { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+        .header-left .brand-sub { font-size: 12px; opacity: 0.8; display: block; font-weight: 300; }
+
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .header-right .university-logo {
+            width: 50px; height: 50px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #1a237e;
+        }
+        .header-right .university-text { font-size: 16px; font-weight: 600; }
+        .header-right .university-sub { font-size: 11px; opacity: 0.8; display: block; font-weight: 300; }
+
+        .container-custom { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            color: #1a237e;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .page-header h2 i {
+            color: #0d47a1;
+            margin-right: 10px;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .balance-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .balance-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .balance-card .num {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1a237e;
+        }
+
+        .balance-card .label {
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .balance-card:nth-child(1) .num { color: #1a237e; }
+        .balance-card:nth-child(2) .num { color: #dc3545; }
+        .balance-card:nth-child(3) .num { color: #28a745; }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .table-container .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .table-container .table-header h4 {
+            color: #1a237e;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .table {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .table thead {
+            background: #1a237e;
+            color: white;
+        }
+
+        .table thead th { padding: 10px 12px; text-align: center; }
+        .table tbody td { padding: 10px 12px; text-align: center; vertical-align: middle; }
+
+        .badge-pending { background: #ffc107; color: #333; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-approved { background: #28a745; color: white; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-rejected { background: #dc3545; color: white; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+        .btn-back {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: #cbd5e0;
+            color: #4a5568;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .balance-cards { grid-template-columns: 1fr 1fr; }
+            .main-header { flex-direction: column; text-align: center; padding: 12px 15px; }
+            .header-left .brand-text { font-size: 20px; }
+            .header-right .university-text { font-size: 14px; }
+            .page-header { flex-direction: column; gap: 15px; text-align: center; }
+            .table-container { overflow-x: auto; }
+            .table { min-width: 550px; }
+        }
+
+        @media (max-width: 480px) {
+            .balance-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-left">
+        <div class="logo-icon">👥</div>
+        <div>
+            <span class="brand-text">Employee Management System</span>
+            <span class="brand-sub">Manage your workforce efficiently</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="university-logo">🏛️</div>
+        <div>
+            <span class="university-text">Chandigarh University</span>
+            <span class="university-sub">Department of Computer Science</span>
+        </div>
+    </div>
+</header>
+
+<div class="container-custom">
+
+    <div class="page-header">
+        <h2><i class="fas fa-umbrella-beach"></i> My Leaves</h2>
+        <div>
+            <a th:href="@{/apply-leave/{id}(id=${employee.id})}" class="btn-apply">
+                <i class="fas fa-plus-circle"></i> Apply Leave
+            </a>
+            <a th:href="@{/}" class="btn-back" style="margin-left: 10px;">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Balance Cards -->
+    <div class="balance-cards">
+        <div class="balance-card">
+            <div class="num" th:text="${balance?.get('total')}">12</div>
+            <div class="label">Total Leaves</div>
+        </div>
+        <div class="balance-card">
+            <div class="num" th:text="${balance?.get('used')}">3</div>
+            <div class="label">Used Leaves</div>
+        </div>
+        <div class="balance-card">
+            <div class="num" th:text="${balance?.get('remaining')}">9</div>
+            <div class="label">Remaining Leaves</div>
+        </div>
+    </div>
+
+    <!-- Leave History Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h4><i class="fas fa-history"></i> Leave History</h4>
+            <span style="color: #4a5568; font-weight: 600;">Total: <span th:text="${leaves.size()}">0</span></span>
+        </div>
+
+        <div th:if="${leaves != null and leaves.size() > 0}">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Type</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="leave, iter : ${leaves}">
+                    <td th:text="${iter.index + 1}">1</td>
+                    <td th:text="${#dates.format(leave.startDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#dates.format(leave.endDate, 'dd-MM-yyyy')}">05-01-2025</td>
+                    <td><span class="badge badge-secondary" th:text="${leave.leaveType}">CASUAL</span></td>
+                    <td th:text="${leave.reason}">Personal</td>
+                    <td>
+                        <span th:if="${leave.status == 'PENDING'}" class="badge-pending">⏳ Pending</span>
+                        <span th:if="${leave.status == 'APPROVED'}" class="badge-approved">✅ Approved</span>
+                        <span th:if="${leave.status == 'REJECTED'}" class="badge-rejected">❌ Rejected</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${leaves == null or leaves.size() == 0}">
+            <div style="text-align: center; padding: 40px 20px; color: #999;">
+                <i class="fas fa-umbrella-beach" style="font-size: 48px; display: block; margin-bottom: 15px;"></i>
+                <h5 style="color: #555;">No leave applications yet</h5>
+                <p style="color: #aaa;">Apply for your first leave now!</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

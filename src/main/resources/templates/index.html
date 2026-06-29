@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
 	<meta charset="UTF-8">
 	<title>EMS - Employee Management System</title>
 	<link rel="icon" type="image/png" th:href="@{/images/logo.png}">
-	<link rel="stylesheet"
-		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
 
 		body {
-			background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+			background: linear-gradient(135deg, #e8eaf6, #c5cae9);
 			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 			min-height: 100vh;
+			overflow: hidden; /* ✅ No scroll */
 		}
 
 		/* ========== HEADER ========== */
@@ -31,10 +26,27 @@
 			justify-content: space-between;
 			align-items: center;
 			box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-			position: sticky;
+			position: fixed;
 			top: 0;
+			left: 0;
+			right: 0;
 			z-index: 1000;
-			width: 100%;
+			height: 70px;
+		}
+
+		/* ===== TOGGLE BUTTON ===== */
+		.menu-toggle {
+			background: none;
+			border: none;
+			color: white;
+			font-size: 28px;
+			cursor: pointer;
+			padding: 5px 15px;
+			transition: 0.3s;
+		}
+
+		.menu-toggle:hover {
+			color: #e0e0e0;
 		}
 
 		.header-left {
@@ -44,26 +56,25 @@
 		}
 
 		.header-left .logo-icon {
-			width: 50px;
-			height: 50px;
+			width: 40px;
+			height: 40px;
 			background: white;
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 28px;
+			font-size: 22px;
 			color: #1a237e;
-			box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 		}
 
 		.header-left .brand-text {
-			font-size: 28px;
+			font-size: 22px;
 			font-weight: 700;
 			letter-spacing: 1px;
 		}
 
 		.header-left .brand-sub {
-			font-size: 12px;
+			font-size: 11px;
 			opacity: 0.8;
 			display: block;
 			font-weight: 300;
@@ -76,51 +87,183 @@
 		}
 
 		.header-right .university-logo {
-			width: 50px;
-			height: 50px;
+			width: 40px;
+			height: 40px;
 			background: white;
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 24px;
+			font-size: 20px;
 			color: #1a237e;
-			box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 		}
 
 		.header-right .university-text {
-			font-size: 16px;
+			font-size: 14px;
 			font-weight: 600;
-			letter-spacing: 0.5px;
 		}
 
 		.header-right .university-sub {
-			font-size: 11px;
+			font-size: 10px;
 			opacity: 0.8;
 			display: block;
 			font-weight: 300;
 		}
 
-		/* ========== BODY - FULL SCREEN ========== */
-		.container-custom {
-			max-width: 100% !important;
-			margin: 0 !important;
-			padding: 30px 40px 140px 40px !important;
-			width: 100%;
+		/* ========== SIDEBAR ========== */
+		.sidebar {
+			position: fixed;
+			top: 70px;
+			left: -260px;
+			width: 240px;
+			height: calc(100vh - 70px);
+			background: linear-gradient(180deg, #1a237e, #0d47a1);
+			color: white;
+			padding: 20px 0;
+			z-index: 999;
+			transition: all 0.3s ease;
+			overflow-y: auto;
+			box-shadow: 4px 0 20px rgba(0,0,0,0.2);
 		}
 
-		/* ========== PAGE TITLE ========== */
+		.sidebar.open {
+			left: 0;
+		}
+
+		.sidebar::-webkit-scrollbar {
+			width: 3px;
+		}
+		.sidebar::-webkit-scrollbar-track {
+			background: rgba(255,255,255,0.05);
+		}
+		.sidebar::-webkit-scrollbar-thumb {
+			background: rgba(255,255,255,0.2);
+			border-radius: 4px;
+		}
+
+		.sidebar-brand {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 10px 20px 20px 20px;
+			border-bottom: 1px solid rgba(255,255,255,0.08);
+		}
+
+		.sidebar-logo {
+			width: 36px;
+			height: 36px;
+			background: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			color: #1a237e;
+		}
+
+		.sidebar-brand-text {
+			font-size: 18px;
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.sidebar-divider {
+			height: 1px;
+			background: rgba(255,255,255,0.08);
+			margin: 10px 20px;
+		}
+
+		.sidebar-menu {
+			padding: 10px 0;
+		}
+
+		.sidebar-item {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			padding: 12px 24px;
+			color: rgba(255,255,255,0.7);
+			text-decoration: none;
+			transition: all 0.3s ease;
+			border-left: 3px solid transparent;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+		}
+
+		.sidebar-item:hover {
+			background: rgba(255,255,255,0.08);
+			color: white;
+			text-decoration: none;
+			border-left-color: #fff;
+		}
+
+		.sidebar-item.active {
+			background: rgba(255,255,255,0.12);
+			color: white;
+			border-left-color: #fff;
+		}
+
+		.sidebar-item i {
+			width: 20px;
+			font-size: 16px;
+			text-align: center;
+		}
+
+		.sidebar-user {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 15px 24px;
+			border-top: 1px solid rgba(255,255,255,0.08);
+			margin-top: auto;
+		}
+
+		.sidebar-user-icon {
+			width: 32px;
+			height: 32px;
+			background: rgba(255,255,255,0.15);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+		}
+
+		.sidebar-user-name {
+			font-weight: 600;
+			font-size: 13px;
+		}
+		.sidebar-user-role {
+			font-size: 10px;
+			opacity: 0.6;
+		}
+
+		/* ===== MAIN CONTENT ===== */
+		.main-content {
+			margin-left: 0;
+			padding: 85px 25px 30px 25px;
+			transition: all 0.3s ease;
+			height: 100vh;
+			overflow-y: auto;
+		}
+
+		.main-content.shifted {
+			margin-left: 240px;
+		}
+
+		/* ===== PAGE TITLE ===== */
 		.page-title {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 30px;
+			margin-bottom: 20px;
 		}
 
 		.page-title h2 {
 			color: #1a237e;
 			font-weight: 700;
-			font-size: 28px;
+			font-size: 24px;
 		}
 
 		.page-title h2 i {
@@ -130,82 +273,83 @@
 
 		.page-title span {
 			color: #4a5568;
-			font-size: 14px;
+			font-size: 13px;
 			font-weight: 600;
 			background: rgba(255,255,255,0.5);
-			padding: 6px 18px;
+			padding: 4px 16px;
 			border-radius: 20px;
-			backdrop-filter: blur(4px);
 		}
 
-		/* ========== LOCATION CARDS - GLASSMORPHISM ========== */
+		/* ===== LOCATION CARDS ===== */
 		.location-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-			gap: 25px;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			gap: 18px;
 		}
 
-		/* ========== LOCATION CARDS - Glassmorphism + Gradient ========== */
 		.location-card {
-			background: rgba(255, 255, 255, 0.15);
-			backdrop-filter: blur(20px);
-			-webkit-backdrop-filter: blur(20px);
-			border-radius: 20px;
-			padding: 28px 22px;
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			background: rgba(255, 255, 255, 0.75);
+			backdrop-filter: blur(12px);
+			border-radius: 14px;
+			padding: 20px 18px;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+			transition: all 0.3s ease;
 			cursor: pointer;
 			position: relative;
 			overflow: hidden;
-			border: 2px solid rgba(255, 255, 255, 0.25);
+			border: 1px solid rgba(255, 255, 255, 0.3);
 		}
 
 		.location-card::before {
 			content: '';
 			position: absolute;
-			top: -2px;
-			left: -2px;
-			right: -2px;
-			bottom: -2px;
-			background: linear-gradient(135deg, #1a237e, #0d47a1, #1a237e);
-			border-radius: 20px;
-			z-index: -1;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: linear-gradient(90deg, #1a237e, #0d47a1);
 			opacity: 0;
-			transition: opacity 0.5s ease;
+			transition: opacity 0.3s ease;
+		}
+
+		.location-card::after {
+			content: attr(data-location);
+			position: absolute;
+			bottom: -5px;
+			right: 8px;
+			font-size: 40px;
+			font-weight: 900;
+			color: rgba(26, 35, 126, 0.04);
+			pointer-events: none;
+			user-select: none;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			transform: rotate(-5deg);
+		}
+
+		.location-card:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.12);
+			border-color: rgba(26, 35, 126, 0.15);
+			background: rgba(255, 255, 255, 0.9);
 		}
 
 		.location-card:hover::before {
 			opacity: 1;
 		}
 
-		.location-card:hover {
-			transform: translateY(-10px) scale(1.02);
-			box-shadow: 0 20px 60px rgba(26, 35, 126, 0.2);
-			border-color: transparent;
-		}
-
 		.location-card .location-icon {
-			font-size: 40px;
-			margin-bottom: 12px;
+			font-size: 30px;
+			margin-bottom: 8px;
 			position: relative;
 			z-index: 1;
-			display: inline-block;
-			animation: floatIcon 3s ease-in-out infinite;
-		}
-
-		@keyframes floatIcon {
-			0%, 100% { transform: translateY(0); }
-			50% { transform: translateY(-6px); }
 		}
 
 		.location-card .location-name {
-			font-size: 22px;
+			font-size: 18px;
 			font-weight: 700;
-			background: linear-gradient(135deg, #1a237e, #0d47a1);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			background-clip: text;
-			margin-bottom: 10px;
+			color: #1a237e;
+			margin-bottom: 6px;
 			position: relative;
 			z-index: 1;
 		}
@@ -213,122 +357,103 @@
 		.location-card .employee-count {
 			display: flex;
 			align-items: center;
-			gap: 10px;
-			font-size: 16px;
-			color: rgba(0, 0, 0, 0.6);
+			gap: 8px;
+			font-size: 14px;
+			color: #4a5568;
 			position: relative;
 			z-index: 1;
 		}
 
 		.location-card .employee-count .count-number {
-			font-size: 30px;
-			font-weight: 800;
+			font-size: 24px;
+			font-weight: 700;
 			background: linear-gradient(135deg, #1a237e, #0d47a1);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
-			padding: 2px 16px;
+			padding: 0 12px;
 			border-radius: 20px;
-			background-color: rgba(255, 255, 255, 0.3);
+			background-color: rgba(26, 35, 126, 0.08);
 		}
 
-		/* Card ke andar shine effect */
-		.location-card::after {
-			content: '';
-			position: absolute;
-			top: -50%;
-			left: -50%;
-			width: 200%;
-			height: 200%;
-			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-			pointer-events: none;
-			z-index: 0;
-			opacity: 0;
-			transition: opacity 0.5s ease;
-		}
-
-		.location-card:hover::after {
-			opacity: 1;
-		}
-
-		/* ===== DASHBOARD BUTTON - Neeche ===== */
-		.floating-dashboard-btn {
-			position: fixed;
-			bottom: 30px;      /* ✅ Neeche */
-			right: 40px;
-			background: linear-gradient(135deg, #28a745, #20c997);
-			color: white;
-			border: none;
-			padding: 16px 30px;
-			border-radius: 50px;
-			font-size: 18px;
-			font-weight: 600;
-			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
-			transition: all 0.3s ease;
-			text-decoration: none;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			z-index: 999;
-		}
-
-		/* ===== ADD EMPLOYEE BUTTON - Uper ===== */
-		.floating-add-btn {
-			position: fixed;
-			bottom: 100px;     /* ✅ Uper */
-			right: 40px;
-			background: linear-gradient(135deg, #1a237e, #0d47a1);
-			color: white;
-			border: none;
-			padding: 16px 30px;
-			border-radius: 50px;
-			font-size: 18px;
-			font-weight: 600;
-			box-shadow: 0 8px 30px rgba(26, 35, 126, 0.4);
-			transition: all 0.3s ease;
-			text-decoration: none;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			z-index: 999;
-			cursor: pointer;
+		/* ===== RESPONSIVE ===== */
+		@media (max-width: 992px) {
+			.location-grid {
+				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+			}
 		}
 
 		@media (max-width: 768px) {
-			.floating-dashboard-btn {
-				bottom: 30px;      /* ✅ Neeche */
-				right: 20px;
+			.main-header {
+				padding: 10px 15px;
+				height: 60px;
 			}
+			.header-left .brand-text { font-size: 18px; }
+			.header-left .brand-sub { font-size: 10px; }
+			.header-right .university-text { font-size: 12px; }
+			.header-right .university-logo { width: 32px; height: 32px; font-size: 16px; }
 
-			.floating-add-btn {
-				bottom: 90px;      /* ✅ Uper */
-				right: 20px;
+			.sidebar {
+				width: 220px;
+				left: -240px;
+				top: 60px;
+				height: calc(100vh - 60px);
 			}
+			.sidebar.open { left: 0; }
+
+			.main-content {
+				padding: 75px 15px 20px 15px;
+				height: calc(100vh - 60px);
+			}
+			.main-content.shifted { margin-left: 0; }
+
+			.location-grid {
+				grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+				gap: 12px;
+			}
+			.location-card { padding: 15px 12px; }
+			.location-card .location-name { font-size: 15px; }
+			.location-card .employee-count .count-number { font-size: 20px; }
+			.page-title h2 { font-size: 20px; }
 		}
 
 		@media (max-width: 480px) {
-			.floating-dashboard-btn {
-				bottom: 25px;      /* ✅ Neeche */
-				right: 15px;
+			.location-grid {
+				grid-template-columns: repeat(2, 1fr);
+				gap: 10px;
 			}
+			.location-card { padding: 12px 10px; }
+			.location-card .location-icon { font-size: 24px; }
+			.location-card .location-name { font-size: 13px; }
+			.location-card .employee-count { font-size: 12px; }
+			.location-card .employee-count .count-number { font-size: 18px; }
+			.sidebar { width: 200px; left: -220px; }
+		}
 
-			.floating-add-btn {
-				bottom: 80px;      /* ✅ Uper */
-				right: 15px;
-			}
+		/* ===== SCROLLBAR STYLING ===== */
+		.main-content::-webkit-scrollbar {
+			width: 4px;
+		}
+		.main-content::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		.main-content::-webkit-scrollbar-thumb {
+			background: #1a237e;
+			border-radius: 4px;
 		}
 	</style>
-
 </head>
-
 <body>
 
 <!-- ========== HEADER ========== -->
 <header class="main-header">
 	<div class="header-left">
+		<button class="menu-toggle" onclick="toggleSidebar()">
+			<i class="fas fa-bars"></i>
+		</button>
 		<div class="logo-icon">👥</div>
 		<div>
-			<span class="brand-text">Employee Management System</span>
+			<span class="brand-text">Employee Management</span>
 			<span class="brand-sub">Manage your workforce efficiently</span>
 		</div>
 	</div>
@@ -341,8 +466,48 @@
 	</div>
 </header>
 
-<!-- ========== BODY ========== -->
-<div class="container-custom">
+<!-- ========== SIDEBAR ========== -->
+<div class="sidebar" id="sidebar">
+	<div class="sidebar-brand">
+		<div class="sidebar-logo">👥</div>
+		<div class="sidebar-brand-text">EMS</div>
+	</div>
+
+	<div class="sidebar-divider"></div>
+
+	<div class="sidebar-menu">
+		<!-- Add Employee -->
+		<a th:href="@{/showNewEmployeeForm}" class="sidebar-item">
+			<i class="fas fa-user-plus"></i>
+			<span>Add Employee</span>
+		</a>
+
+		<!-- Dashboard -->
+		<a th:href="@{/dashboard}" class="sidebar-item">
+			<i class="fas fa-chart-pie"></i>
+			<span>Dashboard</span>
+		</a>
+
+		<!-- Leave Management -->
+		<a th:href="@{/my-leaves/1}" class="sidebar-item">
+			<i class="fas fa-umbrella-beach"></i>
+			<span>Leave Management</span>
+		</a>
+	</div>
+
+	<div class="sidebar-divider"></div>
+
+	<div class="sidebar-user">
+		<div class="sidebar-user-icon">👤</div>
+		<div>
+			<div class="sidebar-user-name">Admin</div>
+			<div class="sidebar-user-role">Chandigarh University</div>
+		</div>
+	</div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content" id="mainContent">
 
 	<div class="page-title">
 		<h2>
@@ -360,10 +525,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">NOIDA</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('NOIDA') != null ? locationCounts.get('NOIDA') : 0}">
-                        0
+					  th:text="${locationCounts?.get('NOIDA') != null ? locationCounts.get('NOIDA') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -373,10 +537,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">DELHI</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('DELHI') != null ? locationCounts.get('DELHI') : 0}">
-                        0
+					  th:text="${locationCounts?.get('DELHI') != null ? locationCounts.get('DELHI') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -386,10 +549,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">AHAMDABAD</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('AHAMDABAD') != null ? locationCounts.get('AHAMDABAD') : 0}">
-                        0
+					  th:text="${locationCounts?.get('AHAMDABAD') != null ? locationCounts.get('AHAMDABAD') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -399,10 +561,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">PUNE</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('PUNE') != null ? locationCounts.get('PUNE') : 0}">
-                        0
+					  th:text="${locationCounts?.get('PUNE') != null ? locationCounts.get('PUNE') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -412,10 +573,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">MUMBAI</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('MUMBAI') != null ? locationCounts.get('MUMBAI') : 0}">
-                        0
+					  th:text="${locationCounts?.get('MUMBAI') != null ? locationCounts.get('MUMBAI') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -425,10 +585,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">BANGLORE</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('BANGLORE') != null ? locationCounts.get('BANGLORE') : 0}">
-                        0
+					  th:text="${locationCounts?.get('BANGLORE') != null ? locationCounts.get('BANGLORE') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -438,10 +597,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">CHENNAI</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('CHENNAI') != null ? locationCounts.get('CHENNAI') : 0}">
-                        0
+					  th:text="${locationCounts?.get('CHENNAI') != null ? locationCounts.get('CHENNAI') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -451,10 +609,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">PATNA</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('PATNA') != null ? locationCounts.get('PATNA') : 0}">
-                        0
+					  th:text="${locationCounts?.get('PATNA') != null ? locationCounts.get('PATNA') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -464,10 +621,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">GOA</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('GOA') != null ? locationCounts.get('GOA') : 0}">
-                        0
+					  th:text="${locationCounts?.get('GOA') != null ? locationCounts.get('GOA') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -477,10 +633,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">HYDERABAD</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('HYDERABAD') != null ? locationCounts.get('HYDERABAD') : 0}">
-                        0
+					  th:text="${locationCounts?.get('HYDERABAD') != null ? locationCounts.get('HYDERABAD') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -490,10 +645,9 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">KOLKATA</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('KOLKATA') != null ? locationCounts.get('KOLKATA') : 0}">
-                        0
+					  th:text="${locationCounts?.get('KOLKATA') != null ? locationCounts.get('KOLKATA') : 0}">0
                     </span>
 			</div>
 		</div>
@@ -503,30 +657,58 @@
 			<div class="location-icon">📍</div>
 			<div class="location-name">LUCKNOW</div>
 			<div class="employee-count">
-				👨‍💼 Total Employees:
+				👨‍💼 Total:
 				<span class="count-number"
-					  th:text="${locationCounts?.get('LUCKNOW') != null ? locationCounts.get('LUCKNOW') : 0}">
-                        0
+					  th:text="${locationCounts?.get('LUCKNOW') != null ? locationCounts.get('LUCKNOW') : 0}">0
                     </span>
 			</div>
 		</div>
 
 	</div>
+
 </div>
 
-<!-- ===== DASHBOARD BUTTON - Right Side ===== -->
-<a th:href="@{/dashboard}" class="floating-dashboard-btn">
-	<i class="fas fa-chart-pie"></i> Dashboard
-</a>
+<!-- ========== SCRIPTS ========== -->
+<script>
+	// ===== TOGGLE SIDEBAR =====
+	function toggleSidebar() {
+		const sidebar = document.getElementById('sidebar');
+		const mainContent = document.getElementById('mainContent');
 
-<!-- ===== ADD EMPLOYEE BUTTON - Right Side ===== -->
-<a th:href="@{/showNewEmployeeForm}" class="floating-add-btn">
-	<i class="fas fa-plus-circle"></i> Add Employee
-</a>
+		sidebar.classList.toggle('open');
+		mainContent.classList.toggle('shifted');
+	}
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	// ===== CLOSE SIDEBAR ON ESC =====
+	document.addEventListener('keydown', function(e) {
+		if (e.key === 'Escape') {
+			const sidebar = document.getElementById('sidebar');
+			const mainContent = document.getElementById('mainContent');
+			if (sidebar.classList.contains('open')) {
+				sidebar.classList.remove('open');
+				mainContent.classList.remove('shifted');
+			}
+		}
+	});
+
+	// ===== CARD CLICK HANDLER =====
+	document.querySelectorAll('.location-card').forEach(card => {
+		card.addEventListener('click', function() {
+			const location = this.getAttribute('data-location') ||
+					this.querySelector('.location-name')?.textContent ||
+					'Unknown';
+			console.log('Location clicked:', location);
+		});
+	});
+
+	// ===== SIDEBAR ITEM ACTIVE =====
+	document.querySelectorAll('.sidebar-item').forEach(item => {
+		item.addEventListener('click', function() {
+			document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+			this.classList.add('active');
+		});
+	});
+</script>
 
 </body>
-
 </html>

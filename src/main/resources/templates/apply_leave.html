@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Apply Leave</title>
+  <link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .apply-container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px 45px;
+      max-width: 520px;
+      width: 95%;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .apply-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a237e;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .apply-title i {
+      color: #0d47a1;
+      font-size: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group label i {
+      color: #1a237e;
+      margin-right: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.8);
+      transition: 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #1a237e;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+      background: white;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .balance-box {
+      background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-box .balance-label {
+      font-weight: 600;
+      color: #1a237e;
+    }
+
+    .balance-box .balance-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0d47a1;
+    }
+
+    .btn-apply {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+    }
+
+    .btn-cancel {
+      width: 100%;
+      padding: 14px;
+      background: #e2e8f0;
+      color: #4a5568;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-cancel:hover {
+      background: #cbd5e0;
+      text-decoration: none;
+      color: #4a5568;
+    }
+
+    @media (max-width: 480px) {
+      .apply-container {
+        padding: 25px 20px;
+      }
+
+      .apply-title {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="apply-container">
+
+  <div class="apply-title">
+    <i class="fas fa-umbrella-beach"></i> Apply Leave
+  </div>
+
+  <form th:action="@{/apply-leave}" th:object="${leave}" method="POST">
+
+    <!-- Hidden Employee ID -->
+    <input type="hidden" name="employeeId" th:value="${employee.id}">
+
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Employee</label>
+      <input type="text" class="form-control"
+             th:value="${employee.firstName} + ' ' + ${employee.lastName}"
+             disabled style="background:#f0f0f0;">
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-calendar-alt"></i> Start Date</label>
+      <input type="date" th:field="*{startDate}" required>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-calendar-alt"></i> End Date</label>
+      <input type="date" th:field="*{endDate}" required>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-tag"></i> Leave Type</label>
+      <select th:field="*{leaveType}" required>
+        <option value="">-- Select --</option>
+        <option value="CASUAL">Casual Leave</option>
+        <option value="SICK">Sick Leave</option>
+        <option value="VACATION">Vacation</option>
+        <option value="EMERGENCY">Emergency</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-pencil-alt"></i> Reason</label>
+      <textarea th:field="*{reason}" placeholder="Enter reason for leave..." required></textarea>
+    </div>
+
+    <div class="balance-box">
+      <span class="balance-label"><i class="fas fa-chart-pie"></i> Leave Balance</span>
+      <span class="balance-value" th:text="${balance?.get('remaining')} + ' days'">9 days</span>
+    </div>
+
+    <button type="submit" class="btn-apply">
+      <i class="fas fa-paper-plane"></i> Apply Leave
+    </button>
+
+    <a th:href="@{/my-leaves/{id}(id=${employee.id})}" class="btn-cancel">
+      <i class="fas fa-times"></i> Cancel
+    </a>
+
+  </form>
+
+</div>
+
+</body>
+</html>
