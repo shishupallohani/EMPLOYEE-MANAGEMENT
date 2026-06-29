@@ -7,9 +7,7 @@
 	<link rel="icon" type="image/png" th:href="@{/images/logo.png}">
 	<link rel="stylesheet"
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-	<!-- Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 
 	<style>
 		* {
@@ -19,7 +17,7 @@
 		}
 
 		body {
-			background: #f0f2f5;
+			background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
 			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 			min-height: 100vh;
 		}
@@ -36,6 +34,7 @@
 			position: sticky;
 			top: 0;
 			z-index: 1000;
+			width: 100%;
 		}
 
 		.header-left {
@@ -102,14 +101,15 @@
 			font-weight: 300;
 		}
 
-		/* ========== BODY ========== */
+		/* ========== BODY - FULL SCREEN ========== */
 		.container-custom {
-			max-width: 1400px;
-			margin: 30px auto;
-			padding: 0 20px 120px 20px;  /* ✅ Bottom padding */
+			max-width: 100% !important;
+			margin: 0 !important;
+			padding: 30px 40px 140px 40px !important;
+			width: 100%;
 		}
 
-		/* Page Title */
+		/* ========== PAGE TITLE ========== */
 		.page-title {
 			display: flex;
 			justify-content: space-between;
@@ -128,81 +128,155 @@
 			margin-right: 10px;
 		}
 
-		/* ========== LOCATION CARDS ========== */
+		.page-title span {
+			color: #4a5568;
+			font-size: 14px;
+			font-weight: 600;
+			background: rgba(255,255,255,0.5);
+			padding: 6px 18px;
+			border-radius: 20px;
+			backdrop-filter: blur(4px);
+		}
+
+		/* ========== LOCATION CARDS - GLASSMORPHISM ========== */
 		.location-grid {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 			gap: 25px;
 		}
 
+		/* ========== LOCATION CARDS - Glassmorphism + Gradient ========== */
 		.location-card {
-			background: white;
-			border-radius: 16px;
-			padding: 25px 20px;
-			box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-			transition: all 0.3s ease;
+			background: rgba(255, 255, 255, 0.15);
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 28px 22px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			cursor: pointer;
 			position: relative;
 			overflow: hidden;
-			border: 2px solid transparent;
+			border: 2px solid rgba(255, 255, 255, 0.25);
 		}
 
 		.location-card::before {
 			content: '';
 			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 4px;
-			background: linear-gradient(90deg, #1a237e, #0d47a1);
+			top: -2px;
+			left: -2px;
+			right: -2px;
+			bottom: -2px;
+			background: linear-gradient(135deg, #1a237e, #0d47a1, #1a237e);
+			border-radius: 20px;
+			z-index: -1;
 			opacity: 0;
-			transition: opacity 0.3s ease;
-		}
-
-		.location-card:hover {
-			transform: translateY(-8px);
-			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.15);
-			border-color: #1a237e;
+			transition: opacity 0.5s ease;
 		}
 
 		.location-card:hover::before {
 			opacity: 1;
 		}
 
+		.location-card:hover {
+			transform: translateY(-10px) scale(1.02);
+			box-shadow: 0 20px 60px rgba(26, 35, 126, 0.2);
+			border-color: transparent;
+		}
+
 		.location-card .location-icon {
-			font-size: 36px;
-			margin-bottom: 10px;
+			font-size: 40px;
+			margin-bottom: 12px;
+			position: relative;
+			z-index: 1;
+			display: inline-block;
+			animation: floatIcon 3s ease-in-out infinite;
+		}
+
+		@keyframes floatIcon {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-6px); }
 		}
 
 		.location-card .location-name {
-			font-size: 20px;
+			font-size: 22px;
 			font-weight: 700;
-			color: #1a237e;
-			margin-bottom: 8px;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			margin-bottom: 10px;
+			position: relative;
+			z-index: 1;
 		}
 
 		.location-card .employee-count {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 10px;
 			font-size: 16px;
-			color: #555;
+			color: rgba(0, 0, 0, 0.6);
+			position: relative;
+			z-index: 1;
 		}
 
 		.location-card .employee-count .count-number {
-			font-size: 28px;
-			font-weight: 700;
-			color: #0d47a1;
-			background: #e8eaf6;
+			font-size: 30px;
+			font-weight: 800;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
 			padding: 2px 16px;
 			border-radius: 20px;
+			background-color: rgba(255, 255, 255, 0.3);
 		}
 
-		/* ========== FLOATING ADD BUTTON ========== */
+		/* Card ke andar shine effect */
+		.location-card::after {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+			pointer-events: none;
+			z-index: 0;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.location-card:hover::after {
+			opacity: 1;
+		}
+
+		/* ===== DASHBOARD BUTTON - Neeche ===== */
+		.floating-dashboard-btn {
+			position: fixed;
+			bottom: 30px;      /* ✅ Neeche */
+			right: 40px;
+			background: linear-gradient(135deg, #28a745, #20c997);
+			color: white;
+			border: none;
+			padding: 16px 30px;
+			border-radius: 50px;
+			font-size: 18px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			z-index: 999;
+		}
+
+		/* ===== ADD EMPLOYEE BUTTON - Uper ===== */
 		.floating-add-btn {
 			position: fixed;
-			bottom: 30px;
-			right: 30px;
+			bottom: 100px;     /* ✅ Uper */
+			right: 40px;
 			background: linear-gradient(135deg, #1a237e, #0d47a1);
 			color: white;
 			border: none;
@@ -217,168 +291,30 @@
 			align-items: center;
 			gap: 10px;
 			z-index: 999;
-		}
-
-		.floating-add-btn:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.5);
-			color: white;
-			text-decoration: none;
-		}
-
-		.floating-add-btn i {
-			font-size: 22px;
-		}
-
-		/* ========== RESPONSIVE ========== */
-		@media (max-width: 768px) {
-			.main-header {
-				flex-direction: column;
-				text-align: center;
-				padding: 12px 15px;
-			}
-
-			.header-left .brand-text {
-				font-size: 20px;
-			}
-
-			.header-right .university-text {
-				font-size: 14px;
-			}
-
-			.location-grid {
-				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-				gap: 15px;
-			}
-
-			.page-title h2 {
-				font-size: 22px;
-			}
-
-			.floating-add-btn {
-				bottom: 20px;
-				right: 20px;
-				padding: 12px 20px;
-				font-size: 15px;
-			}
-		}
-
-		@media (max-width: 480px) {
-			.location-grid {
-				grid-template-columns: repeat(2, 1fr);
-				gap: 12px;
-			}
-
-			.location-card {
-				padding: 18px 12px;
-			}
-
-			.location-card .location-name {
-				font-size: 16px;
-			}
-
-			.location-card .employee-count .count-number {
-				font-size: 22px;
-				padding: 0 12px;
-			}
-		}
-
-
-		/* ===== DASHBOARD BUTTON - LEFT SIDE ===== */
-		.floating-dashboard-btn {
-			position: fixed;
-			bottom: 100px;  /* ✅ Upar karo */
-			left: 30px;
-			background: linear-gradient(135deg, #28a745, #20c997);
-			color: white;
-			border: none;
-			padding: 14px 28px;
-			border-radius: 50px;
-			font-size: 16px;
-			font-weight: 600;
-			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
-			transition: all 0.3s ease;
-			text-decoration: none;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			z-index: 999;
-		}
-
-		.floating-dashboard-btn:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 12px 40px rgba(40, 167, 69, 0.5);
-			color: white;
-			text-decoration: none;
-		}
-
-		/* ===== ADD EMPLOYEE BUTTON - RIGHT SIDE ===== */
-		.floating-add-btn {
-			position: fixed;
-			bottom: 30px;
-			right: 30px;
-			background: linear-gradient(135deg, #1a237e, #0d47a1);
-			color: white;
-			border: none;
-			padding: 14px 28px;
-			border-radius: 50px;
-			font-size: 16px;
-			font-weight: 600;
-			box-shadow: 0 8px 30px rgba(26, 35, 126, 0.4);
-			transition: all 0.3s ease;
-			text-decoration: none;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			z-index: 999;
 			cursor: pointer;
 		}
 
-		.floating-add-btn:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.5);
-			color: white;
-			text-decoration: none;
-		}
-
-		/* ===== RESPONSIVE ===== */
 		@media (max-width: 768px) {
-			.container-custom {
-				padding: 0 15px 140px 15px;  /* ✅ Mobile mein bhi padding */
-			}
-
 			.floating-dashboard-btn {
-				bottom: 100px;
-				left: 20px;
-				padding: 10px 18px;
-				font-size: 14px;
+				bottom: 30px;      /* ✅ Neeche */
+				right: 20px;
 			}
 
 			.floating-add-btn {
-				bottom: 30px;
+				bottom: 90px;      /* ✅ Uper */
 				right: 20px;
-				padding: 10px 18px;
-				font-size: 14px;
 			}
 		}
 
 		@media (max-width: 480px) {
-			.container-custom {
-				padding: 0 10px 130px 10px;
-			}
-
 			.floating-dashboard-btn {
-				bottom: 85px;
-				left: 15px;
-				padding: 8px 14px;
-				font-size: 12px;
+				bottom: 25px;      /* ✅ Neeche */
+				right: 15px;
 			}
 
 			.floating-add-btn {
-				bottom: 25px;
+				bottom: 80px;      /* ✅ Uper */
 				right: 15px;
-				padding: 8px 14px;
-				font-size: 12px;
 			}
 		}
 	</style>
@@ -408,204 +344,188 @@
 <!-- ========== BODY ========== -->
 <div class="container-custom">
 
-	<!-- Page Title -->
 	<div class="page-title">
 		<h2>
 			<i class="fas fa-map-marker-alt"></i> Our Locations
 		</h2>
-		<span style="color: #666; font-size: 14px;">
-				<i class="fas fa-building"></i> Total Locations: 12
-			</span>
+		<span>
+                <i class="fas fa-building"></i> Total Locations: 12
+            </span>
 	</div>
 
-	<!-- Location Cards Grid -->
 	<div class="location-grid">
 
 		<!-- NOIDA -->
-		<div class="location-card" onclick="window.location.href='/location/NOIDA'">
+		<div class="location-card" onclick="window.location.href='/location/NOIDA'" data-location="NOIDA">
 			<div class="location-icon">📍</div>
 			<div class="location-name">NOIDA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('NOIDA') != null ? locationCounts.get('NOIDA') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- DELHI -->
-		<div class="location-card" onclick="window.location.href='/location/DELHI'">
+		<div class="location-card" onclick="window.location.href='/location/DELHI'" data-location="DELHI">
 			<div class="location-icon">📍</div>
 			<div class="location-name">DELHI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('DELHI') != null ? locationCounts.get('DELHI') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- AHAMDABAD -->
-		<div class="location-card" onclick="window.location.href='/location/AHAMDABAD'">
+		<div class="location-card" onclick="window.location.href='/location/AHAMDABAD'" data-location="AHAMDABAD">
 			<div class="location-icon">📍</div>
 			<div class="location-name">AHAMDABAD</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('AHAMDABAD') != null ? locationCounts.get('AHAMDABAD') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- PUNE -->
-		<div class="location-card" onclick="window.location.href='/location/PUNE'">
+		<div class="location-card" onclick="window.location.href='/location/PUNE'" data-location="PUNE">
 			<div class="location-icon">📍</div>
 			<div class="location-name">PUNE</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('PUNE') != null ? locationCounts.get('PUNE') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- MUMBAI -->
-		<div class="location-card" onclick="window.location.href='/location/MUMBAI'">
+		<div class="location-card" onclick="window.location.href='/location/MUMBAI'" data-location="MUMBAI">
 			<div class="location-icon">📍</div>
 			<div class="location-name">MUMBAI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('MUMBAI') != null ? locationCounts.get('MUMBAI') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- BANGLORE -->
-		<div class="location-card" onclick="window.location.href='/location/BANGLORE'">
+		<div class="location-card" onclick="window.location.href='/location/BANGLORE'" data-location="BANGLORE">
 			<div class="location-icon">📍</div>
 			<div class="location-name">BANGLORE</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('BANGLORE') != null ? locationCounts.get('BANGLORE') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- CHENNAI -->
-		<div class="location-card" onclick="window.location.href='/location/CHENNAI'">
+		<div class="location-card" onclick="window.location.href='/location/CHENNAI'" data-location="CHENNAI">
 			<div class="location-icon">📍</div>
 			<div class="location-name">CHENNAI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('CHENNAI') != null ? locationCounts.get('CHENNAI') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- PATNA -->
-		<div class="location-card" onclick="window.location.href='/location/PATNA'">
+		<div class="location-card" onclick="window.location.href='/location/PATNA'" data-location="PATNA">
 			<div class="location-icon">📍</div>
 			<div class="location-name">PATNA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('PATNA') != null ? locationCounts.get('PATNA') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- GOA -->
-		<div class="location-card" onclick="window.location.href='/location/GOA'">
+		<div class="location-card" onclick="window.location.href='/location/GOA'" data-location="GOA">
 			<div class="location-icon">📍</div>
 			<div class="location-name">GOA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('GOA') != null ? locationCounts.get('GOA') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- HYDERABAD -->
-		<div class="location-card" onclick="window.location.href='/location/HYDERABAD'">
+		<div class="location-card" onclick="window.location.href='/location/HYDERABAD'" data-location="HYDERABAD">
 			<div class="location-icon">📍</div>
 			<div class="location-name">HYDERABAD</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('HYDERABAD') != null ? locationCounts.get('HYDERABAD') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- KOLKATA -->
-		<div class="location-card" onclick="window.location.href='/location/KOLKATA'">
+		<div class="location-card" onclick="window.location.href='/location/KOLKATA'" data-location="KOLKATA">
 			<div class="location-icon">📍</div>
 			<div class="location-name">KOLKATA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('KOLKATA') != null ? locationCounts.get('KOLKATA') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 		<!-- LUCKNOW -->
-		<div class="location-card" onclick="window.location.href='/location/LUCKNOW'">
+		<div class="location-card" onclick="window.location.href='/location/LUCKNOW'" data-location="LUCKNOW">
 			<div class="location-icon">📍</div>
 			<div class="location-name">LUCKNOW</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
 				<span class="count-number"
 					  th:text="${locationCounts?.get('LUCKNOW') != null ? locationCounts.get('LUCKNOW') : 0}">
-                0
-            </span>
+                        0
+                    </span>
 			</div>
 		</div>
 
 	</div>
+</div>
 
-<!-- ===== DASHBOARD BUTTON - LEFT SIDE ===== -->
+<!-- ===== DASHBOARD BUTTON - Right Side ===== -->
 <a th:href="@{/dashboard}" class="floating-dashboard-btn">
 	<i class="fas fa-chart-pie"></i> Dashboard
 </a>
 
-<!-- ========== FLOATING ADD EMPLOYEE BUTTON ========== -->
+<!-- ===== ADD EMPLOYEE BUTTON - Right Side ===== -->
 <a th:href="@{/showNewEmployeeForm}" class="floating-add-btn">
 	<i class="fas fa-plus-circle"></i> Add Employee
 </a>
 
-<!-- ========== SCRIPTS ========== -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
-<script>
-	// Card click handler - for future use (location wise employee list)
-	document.querySelectorAll('.location-card').forEach(card => {
-		card.addEventListener('click', function() {
-			const location = this.getAttribute('th:data-location') ||
-					this.querySelector('.location-name')?.textContent ||
-					'Unknown';
-			console.log('Location clicked:', location);
-			// Future: redirect to location specific employee list
-			// window.location.href = '/employees/location/' + location;
-		});
-	});
-</script>
 
 </body>
 
