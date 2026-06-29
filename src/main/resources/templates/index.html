@@ -4,11 +4,12 @@
 <head>
 	<meta charset="UTF-8">
 	<title>EMS - Employee Management System</title>
-	<link rel="icon" type="image/png" th:href="@{/css/images/logo.png}">
+	<link rel="icon" type="image/png" th:href="@{/images/logo.png}">
 	<link rel="stylesheet"
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 	<!-- Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 
 	<style>
 		* {
@@ -105,7 +106,7 @@
 		.container-custom {
 			max-width: 1400px;
 			margin: 30px auto;
-			padding: 0 20px;
+			padding: 0 20px 120px 20px;  /* ✅ Bottom padding */
 		}
 
 		/* Page Title */
@@ -197,18 +198,6 @@
 			border-radius: 20px;
 		}
 
-		.location-card .card-badge {
-			position: absolute;
-			top: 12px;
-			right: 12px;
-			background: #e8eaf6;
-			color: #1a237e;
-			font-size: 11px;
-			font-weight: 600;
-			padding: 3px 12px;
-			border-radius: 20px;
-		}
-
 		/* ========== FLOATING ADD BUTTON ========== */
 		.floating-add-btn {
 			position: fixed;
@@ -293,6 +282,105 @@
 				padding: 0 12px;
 			}
 		}
+
+
+		/* ===== DASHBOARD BUTTON - LEFT SIDE ===== */
+		.floating-dashboard-btn {
+			position: fixed;
+			bottom: 100px;  /* ✅ Upar karo */
+			left: 30px;
+			background: linear-gradient(135deg, #28a745, #20c997);
+			color: white;
+			border: none;
+			padding: 14px 28px;
+			border-radius: 50px;
+			font-size: 16px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			z-index: 999;
+		}
+
+		.floating-dashboard-btn:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 12px 40px rgba(40, 167, 69, 0.5);
+			color: white;
+			text-decoration: none;
+		}
+
+		/* ===== ADD EMPLOYEE BUTTON - RIGHT SIDE ===== */
+		.floating-add-btn {
+			position: fixed;
+			bottom: 30px;
+			right: 30px;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			color: white;
+			border: none;
+			padding: 14px 28px;
+			border-radius: 50px;
+			font-size: 16px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(26, 35, 126, 0.4);
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			z-index: 999;
+			cursor: pointer;
+		}
+
+		.floating-add-btn:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.5);
+			color: white;
+			text-decoration: none;
+		}
+
+		/* ===== RESPONSIVE ===== */
+		@media (max-width: 768px) {
+			.container-custom {
+				padding: 0 15px 140px 15px;  /* ✅ Mobile mein bhi padding */
+			}
+
+			.floating-dashboard-btn {
+				bottom: 100px;
+				left: 20px;
+				padding: 10px 18px;
+				font-size: 14px;
+			}
+
+			.floating-add-btn {
+				bottom: 30px;
+				right: 20px;
+				padding: 10px 18px;
+				font-size: 14px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.container-custom {
+				padding: 0 10px 130px 10px;
+			}
+
+			.floating-dashboard-btn {
+				bottom: 85px;
+				left: 15px;
+				padding: 8px 14px;
+				font-size: 12px;
+			}
+
+			.floating-add-btn {
+				bottom: 25px;
+				right: 15px;
+				padding: 8px 14px;
+				font-size: 12px;
+			}
+		}
 	</style>
 
 </head>
@@ -333,166 +421,168 @@
 	<!-- Location Cards Grid -->
 	<div class="location-grid">
 
-		<!-- Card 1: NOIDA -->
-		<div class="location-card"
-			 th:data-location="NOIDA"
-			 onclick="window.location.href='/location/NOIDA'">
+		<!-- NOIDA -->
+		<div class="location-card" onclick="window.location.href='/location/NOIDA'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">NOIDA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('NOIDA') != null ? locationCounts.get('NOIDA') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('NOIDA') != null ? locationCounts.get('NOIDA') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-
-		<!-- Card 2: DELHI -->
-		<div class="location-card"
-			 th:data-location="DELHI"
-			 onclick="window.location.href='/location/DELHI'">
+		<!-- DELHI -->
+		<div class="location-card" onclick="window.location.href='/location/DELHI'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">DELHI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('DELHI') != null ? locationCounts.get('DELHI') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('DELHI') != null ? locationCounts.get('DELHI') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 3: AHAMDABAD -->
-		<div class="location-card"
-			 th:data-location="AHAMDABAD"
-			 onclick="window.location.href='/location/AHAMDABAD'">
+		<!-- AHAMDABAD -->
+		<div class="location-card" onclick="window.location.href='/location/AHAMDABAD'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">AHAMDABAD</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('AHAMDABAD') != null ? locationCounts.get('AHAMDABAD') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('AHAMDABAD') != null ? locationCounts.get('AHAMDABAD') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 4: PUNE -->
-		<div class="location-card"
-			 th:data-location="PUNE"
-			 onclick="window.location.href='/location/PUNE'">
+		<!-- PUNE -->
+		<div class="location-card" onclick="window.location.href='/location/PUNE'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">PUNE</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('PUNE') != null ? locationCounts.get('PUNE') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('PUNE') != null ? locationCounts.get('PUNE') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 5: MUMBAI -->
-		<div class="location-card"
-			 th:data-location="MUMBAI"
-			 onclick="window.location.href='/location/MUMBAI'">
+		<!-- MUMBAI -->
+		<div class="location-card" onclick="window.location.href='/location/MUMBAI'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">MUMBAI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('MUMBAI') != null ? locationCounts.get('MUMBAI') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('MUMBAI') != null ? locationCounts.get('MUMBAI') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 6: BANGLORE -->
-		<div class="location-card"
-			 th:data-location="BANGLORE"
-			 onclick="window.location.href='/location/BANGLORE'">
+		<!-- BANGLORE -->
+		<div class="location-card" onclick="window.location.href='/location/BANGLORE'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">BANGLORE</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('BANGLORE') != null ? locationCounts.get('BANGLORE') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('BANGLORE') != null ? locationCounts.get('BANGLORE') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 7: CHENNAI -->
-		<div class="location-card"
-			 th:data-location="CHENNAI"
-			 onclick="window.location.href='/location/CHENNAI'">
+		<!-- CHENNAI -->
+		<div class="location-card" onclick="window.location.href='/location/CHENNAI'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">CHENNAI</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('CHENNAI') != null ? locationCounts.get('CHENNAI') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('CHENNAI') != null ? locationCounts.get('CHENNAI') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 8: PATNA -->
-		<div class="location-card"
-			 th:data-location="PATNA"
-			 onclick="window.location.href='/location/PATNA'">
+		<!-- PATNA -->
+		<div class="location-card" onclick="window.location.href='/location/PATNA'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">PATNA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('PATNA') != null ? locationCounts.get('PATNA') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('PATNA') != null ? locationCounts.get('PATNA') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 9: GOA -->
-		<div class="location-card"
-			 th:data-location="GOA"
-			 onclick="window.location.href='/location/GOA'">
+		<!-- GOA -->
+		<div class="location-card" onclick="window.location.href='/location/GOA'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">GOA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('GOA') != null ? locationCounts.get('GOA') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('GOA') != null ? locationCounts.get('GOA') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 10: HYDERABAD -->
-		<div class="location-card"
-			 th:data-location="HYDERABAD"
-			 onclick="window.location.href='/location/HYDERABAD'">
+		<!-- HYDERABAD -->
+		<div class="location-card" onclick="window.location.href='/location/HYDERABAD'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">HYDERABAD</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('HYDERABAD') != null ? locationCounts.get('HYDERABAD') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('HYDERABAD') != null ? locationCounts.get('HYDERABAD') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 11: KOLKATA -->
-		<div class="location-card"
-			 th:data-location="KOLKATA"
-			 onclick="window.location.href='/location/KOLKATA'">
+		<!-- KOLKATA -->
+		<div class="location-card" onclick="window.location.href='/location/KOLKATA'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">KOLKATA</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('KOLKATA') != null ? locationCounts.get('KOLKATA') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('KOLKATA') != null ? locationCounts.get('KOLKATA') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
-		<!-- Card 12: LUCKNOW -->
-		<div class="location-card"
-			 th:data-location="LUCKNOW"
-			 onclick="window.location.href='/location/LUCKNOW'">
+		<!-- LUCKNOW -->
+		<div class="location-card" onclick="window.location.href='/location/LUCKNOW'">
 			<div class="location-icon">📍</div>
 			<div class="location-name">LUCKNOW</div>
 			<div class="employee-count">
 				👨‍💼 Total Employees:
-				<span class="count-number" th:text="${locationCounts?.get('LUCKNOW') != null ? locationCounts.get('LUCKNOW') : 0}">0</span>
+				<span class="count-number"
+					  th:text="${locationCounts?.get('LUCKNOW') != null ? locationCounts.get('LUCKNOW') : 0}">
+                0
+            </span>
 			</div>
-			<span class="card-badge">Active</span>
 		</div>
 
 	</div>
 
-</div>
+<!-- ===== DASHBOARD BUTTON - LEFT SIDE ===== -->
+<a th:href="@{/dashboard}" class="floating-dashboard-btn">
+	<i class="fas fa-chart-pie"></i> Dashboard
+</a>
 
 <!-- ========== FLOATING ADD EMPLOYEE BUTTON ========== -->
 <a th:href="@{/showNewEmployeeForm}" class="floating-add-btn">

@@ -77,4 +77,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<Employee> getEmployeesByLocation(String location) {
 		return employeeRepository.findByLocationIgnoreCase(location);
 	}
+
+	@Override
+	public List<Employee> getRecentEmployees(int limit) {
+		return employeeRepository.findTop5ByOrderByIdDesc();
+	}
+
+	@Override
+	public List<Employee> searchEmployees(String query) {
+		if (query == null || query.trim().isEmpty()) {
+			return employeeRepository.findAll();
+		}
+		return employeeRepository.searchEmployees(query.trim());
+	}
 }

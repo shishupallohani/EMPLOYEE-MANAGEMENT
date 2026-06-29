@@ -23,4 +23,16 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
     @Query("SELECT e FROM Employee e WHERE UPPER(e.location) = UPPER(:location)")
     List<Employee> findByLocationIgnoreCase(@Param("location") String location);
 
+
+    // Recent 5 employees
+    List<Employee> findTop5ByOrderByIdDesc();
+
+    // Search employees
+    @Query("SELECT e FROM Employee e WHERE " +
+            "LOWER(e.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(e.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(e.email) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(e.location) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Employee> searchEmployees(@Param("query") String query);
+
 }

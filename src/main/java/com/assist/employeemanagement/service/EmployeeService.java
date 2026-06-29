@@ -19,4 +19,10 @@ public interface EmployeeService {
 
 	// Location wise employees list
 	List<Employee> getEmployeesByLocation(String location);
+
+	// Dashboard
+	List<Employee> getRecentEmployees(int limit);
+
+	// Search
+	List<Employee> searchEmployees(String query);
 }
