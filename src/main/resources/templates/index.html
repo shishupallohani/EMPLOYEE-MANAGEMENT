@@ -113,7 +113,7 @@
 		.sidebar {
 			position: fixed;
 			top: 70px;
-			left: -260px;
+			left: 0;
 			width: 240px;
 			height: calc(100vh - 70px);
 			background: linear-gradient(180deg, #1a237e, #0d47a1);
@@ -123,6 +123,10 @@
 			transition: all 0.3s ease;
 			overflow-y: auto;
 			box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+		}
+
+		.sidebar.closed {
+			left: -260px;
 		}
 
 		.sidebar.open {
@@ -290,25 +294,29 @@
 			border-radius: 20px;
 		}
 
-		/* ========== LOCATION CARDS - GLASSMORPHISM + GRADIENT BORDER ========== */
+		/* ========== LOCATION CARDS - BIG & EYE-CATCHING ========== */
 		.location-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-			gap: 18px;
+			grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+			gap: 22px;
 		}
 
 		.location-card {
 			background: rgba(255, 255, 255, 0.15);
 			backdrop-filter: blur(20px);
 			-webkit-backdrop-filter: blur(20px);
-			border-radius: 20px;
-			padding: 22px 18px;
+			border-radius: 24px;
+			padding: 28px 22px;
 			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
 			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			cursor: pointer;
 			position: relative;
 			overflow: hidden;
 			border: 2px solid rgba(255, 255, 255, 0.25);
+			min-height: 160px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 		}
 
 		/* Gradient Border */
@@ -320,7 +328,7 @@
 			right: -2px;
 			bottom: -2px;
 			background: linear-gradient(135deg, #1a237e, #0d47a1, #1a237e);
-			border-radius: 20px;
+			border-radius: 24px;
 			z-index: -1;
 			opacity: 0;
 			transition: opacity 0.5s ease;
@@ -331,31 +339,15 @@
 		}
 
 		.location-card:hover {
-			transform: translateY(-10px) scale(1.02);
-			box-shadow: 0 20px 60px rgba(26, 35, 126, 0.2);
+			transform: translateY(-12px) scale(1.03);
+			box-shadow: 0 25px 60px rgba(26, 35, 126, 0.25);
 			border-color: transparent;
 		}
 
-		/* Location Watermark */
-		.location-card::after {
-			content: attr(data-location);
-			position: absolute;
-			bottom: -5px;
-			right: 8px;
-			font-size: 40px;
-			font-weight: 900;
-			color: rgba(26, 35, 126, 0.04);
-			pointer-events: none;
-			user-select: none;
-			text-transform: uppercase;
-			letter-spacing: 2px;
-			transform: rotate(-5deg);
-			z-index: 0;
-		}
-
+		/* Location Icon - Bigger */
 		.location-card .location-icon {
-			font-size: 32px;
-			margin-bottom: 8px;
+			font-size: 44px;
+			margin-bottom: 12px;
 			position: relative;
 			z-index: 1;
 			display: inline-block;
@@ -363,45 +355,52 @@
 		}
 
 		@keyframes floatIcon {
-			0%, 100% { transform: translateY(0); }
-			50% { transform: translateY(-5px); }
+			0%, 100% { transform: translateY(0) rotate(0deg); }
+			50% { transform: translateY(-8px) rotate(3deg); }
 		}
 
+		/* Location Name - Big & Bold */
 		.location-card .location-name {
-			font-size: 18px;
-			font-weight: 700;
-			background: linear-gradient(135deg, #1a237e, #0d47a1);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			background-clip: text;
-			margin-bottom: 6px;
-			position: relative;
-			z-index: 1;
-		}
-
-		.location-card .employee-count {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			font-size: 14px;
-			color: rgba(0, 0, 0, 0.6);
-			position: relative;
-			z-index: 1;
-		}
-
-		.location-card .employee-count .count-number {
 			font-size: 24px;
 			font-weight: 800;
 			background: linear-gradient(135deg, #1a237e, #0d47a1);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
-			padding: 0 12px;
-			border-radius: 20px;
-			background-color: rgba(255, 255, 255, 0.3);
+			margin-bottom: 8px;
+			position: relative;
+			z-index: 1;
+			letter-spacing: 1px;
+			text-transform: uppercase;
 		}
 
-		/* Shine Effect - Override watermark */
+		/* Employee Count */
+		.location-card .employee-count {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-size: 16px;
+			color: rgba(0, 0, 0, 0.6);
+			position: relative;
+			z-index: 1;
+			font-weight: 500;
+		}
+
+		.location-card .employee-count .count-number {
+			font-size: 32px;
+			font-weight: 900;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			padding: 0 14px;
+			border-radius: 20px;
+			background-color: rgba(255, 255, 255, 0.3);
+			min-width: 40px;
+			text-align: center;
+		}
+
+		/* Shine Effect */
 		.location-card::after {
 			content: '';
 			position: absolute;
@@ -409,7 +408,7 @@
 			left: -50%;
 			width: 200%;
 			height: 200%;
-			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+			background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
 			pointer-events: none;
 			z-index: 0;
 			opacity: 0;
@@ -418,6 +417,74 @@
 
 		.location-card:hover::after {
 			opacity: 1;
+		}
+
+		/* Watermark - Bigger */
+		.location-card .card-watermark {
+			position: absolute;
+			bottom: -10px;
+			right: 5px;
+			font-size: 55px;
+			font-weight: 900;
+			color: rgba(26, 35, 126, 0.04);
+			pointer-events: none;
+			user-select: none;
+			text-transform: uppercase;
+			letter-spacing: 3px;
+			transform: rotate(-5deg);
+			z-index: 0;
+			font-family: 'Segoe UI', sans-serif;
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.location-grid {
+				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+				gap: 15px;
+			}
+			.location-card {
+				padding: 20px 16px;
+				min-height: 130px;
+				border-radius: 18px;
+			}
+			.location-card .location-icon {
+				font-size: 34px;
+			}
+			.location-card .location-name {
+				font-size: 20px;
+			}
+			.location-card .employee-count .count-number {
+				font-size: 26px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.location-grid {
+				grid-template-columns: repeat(2, 1fr);
+				gap: 12px;
+			}
+			.location-card {
+				padding: 16px 12px;
+				min-height: 110px;
+				border-radius: 14px;
+			}
+			.location-card .location-icon {
+				font-size: 28px;
+				margin-bottom: 6px;
+			}
+			.location-card .location-name {
+				font-size: 16px;
+				letter-spacing: 0.5px;
+			}
+			.location-card .employee-count {
+				font-size: 12px;
+				gap: 6px;
+			}
+			.location-card .employee-count .count-number {
+				font-size: 20px;
+				padding: 0 8px;
+				min-width: 30px;
+			}
 		}
 
 		/* ===== RESPONSIVE ===== */
@@ -473,6 +540,70 @@
 			.location-card .employee-count .count-number { font-size: 18px; }
 			.sidebar { width: 200px; left: -220px; }
 		}
+
+
+		/* ===== GREEN ADD EMPLOYEE BUTTON ===== */
+		.floating-add-btn-green {
+			position: fixed;
+			bottom: 30px;
+			right: 30px;
+			background: linear-gradient(135deg, #28a745, #20c997);
+			color: white;
+			border: none;
+			padding: 16px 30px;
+			border-radius: 50px;
+			font-size: 18px;
+			font-weight: 600;
+			box-shadow: 0 8px 30px rgba(40, 167, 69, 0.4);
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			z-index: 999;
+			cursor: pointer;
+		}
+
+		.floating-add-btn-green:hover {
+			transform: translateY(-4px) scale(1.05);
+			box-shadow: 0 12px 40px rgba(40, 167, 69, 0.6);
+			color: white;
+			text-decoration: none;
+		}
+
+		.floating-add-btn-green i {
+			font-size: 22px;
+			animation: pulseIcon 2s ease-in-out infinite;
+		}
+
+		@keyframes pulseIcon {
+			0%, 100% { transform: scale(1); }
+			50% { transform: scale(1.2); }
+		}
+
+		/* ===== RESPONSIVE ===== */
+		@media (max-width: 768px) {
+			.floating-add-btn-green {
+				bottom: 20px;
+				right: 20px;
+				padding: 12px 20px;
+				font-size: 15px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.floating-add-btn-green {
+				bottom: 15px;
+				right: 15px;
+				padding: 10px 16px;
+				font-size: 13px;
+			}
+			.floating-add-btn-green i {
+				font-size: 18px;
+			}
+		}
+
+
 	</style>
 </head>
 <body>
@@ -499,7 +630,7 @@
 </header>
 
 <!-- ========== SIDEBAR ========== -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar open" id="sidebar">
 	<div class="sidebar-brand">
 		<div class="sidebar-logo">👥</div>
 		<div class="sidebar-brand-text">EMS</div>
@@ -540,7 +671,7 @@
 </div>
 
 <!-- ========== MAIN CONTENT ========== -->
-<div class="main-content" id="mainContent">
+	<div class="main-content shifted" id="mainContent">
 
 	<div class="page-title">
 		<h2>
@@ -706,7 +837,8 @@
 	function toggleSidebar() {
 		const sidebar = document.getElementById('sidebar');
 		const mainContent = document.getElementById('mainContent');
-		sidebar.classList.toggle('open');
+
+		sidebar.classList.toggle('closed');
 		mainContent.classList.toggle('shifted');
 	}
 
@@ -728,6 +860,14 @@
 		});
 	});
 </script>
+
+<!-- ✅ GREEN ADD EMPLOYEE BUTTON - YAHAN DAALO -->
+<a th:href="@{/showNewEmployeeForm}" class="floating-add-btn-green">
+	<i class="fas fa-plus-circle"></i> Add Employee
+</a>
+
+</body>
+</html>
 
 </body>
 </html>
