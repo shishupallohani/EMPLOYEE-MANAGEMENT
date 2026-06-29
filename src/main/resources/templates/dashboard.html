@@ -67,6 +67,30 @@
       gap: 15px;
     }
 
+    .header-nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .header-nav a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .header-nav a:hover {
+      color: white;
+      text-decoration: none;
+    }
+
+    .header-nav a.active {
+      color: white;
+      border-bottom: 2px solid white;
+      padding-bottom: 4px;
+    }
+
     .header-right .university-logo {
       width: 50px;
       height: 50px;
@@ -93,35 +117,11 @@
       font-weight: 300;
     }
 
-    .header-nav {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .header-nav a {
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .header-nav a:hover {
-      color: white;
-      text-decoration: none;
-    }
-
-    .header-nav a.active {
-      color: white;
-      border-bottom: 2px solid white;
-      padding-bottom: 4px;
-    }
-
-    /* ===== CONTAINER ===== */
+    /* ===== CONTAINER - FULL SCREEN ===== */
     .container-custom {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px;
+      max-width: 100%;
+      margin: 0;
+      padding: 20px 30px;
     }
 
     /* ===== STATS CARDS ===== */
@@ -169,7 +169,7 @@
     .stat-card:nth-child(3) .stat-icon { color: #28a745; }
     .stat-card:nth-child(4) .stat-icon { color: #dc3545; }
 
-    /* ===== SEARCH BAR ===== */
+    /* ===== SEARCH SECTION ===== */
     .search-section {
       background: white;
       border-radius: 16px;
@@ -229,7 +229,91 @@
       background: #cbd5e0;
     }
 
-    /* ===== CHART & RECENT ===== */
+    /* ===== SEARCH RESULTS ===== */
+    .search-results {
+      display: none;
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+    }
+
+    .search-results.show {
+      display: block;
+    }
+
+    .search-results .result-count {
+      color: #4a5568;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .search-results .result-table {
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .search-results .result-table th {
+      text-align: left;
+      padding: 10px 8px;
+      color: #4a5568;
+      border-bottom: 2px solid #e8eaf6;
+      font-weight: 700;
+    }
+
+    .search-results .result-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* ===== VIEW BUTTON (Search Results) ===== */
+    .btn-view-sm {
+      background: #17a2b8;
+      color: white;
+      border: none;
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-view-sm:hover {
+      background: #138496;
+      color: white;
+      text-decoration: none;
+    }
+
+    /* ===== UPDATE BUTTON (Recent Employees) ===== */
+    .btn-update-sm {
+      background: #ffc107;
+      color: #333;
+      border: none;
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-update-sm:hover {
+      background: #e0a800;
+      color: #333;
+      text-decoration: none;
+    }
+
+    /* ===== CONTENT GRID ===== */
     .content-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -327,61 +411,6 @@
       font-weight: 600;
     }
 
-    .recent-table .btn-view-sm {
-      background: #17a2b8;
-      color: white;
-      border: none;
-      padding: 3px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .recent-table .btn-view-sm:hover {
-      background: #138496;
-      color: white;
-      text-decoration: none;
-    }
-
-    /* ===== SEARCH RESULTS ===== */
-    .search-results {
-      display: none;
-      background: white;
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
-    }
-
-    .search-results.show {
-      display: block;
-    }
-
-    .search-results .result-count {
-      color: #4a5568;
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-
-    .search-results .result-table {
-      width: 100%;
-      font-size: 14px;
-    }
-
-    .search-results .result-table th {
-      text-align: left;
-      padding: 10px 8px;
-      color: #4a5568;
-      border-bottom: 2px solid #e8eaf6;
-      font-weight: 700;
-    }
-
-    .search-results .result-table td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 992px) {
       .stats-grid {
@@ -442,9 +471,8 @@
         justify-content: center;
       }
 
-      .chart-bar-item .bar-label {
-        min-width: 60px;
-        font-size: 12px;
+      .container-custom {
+        padding: 15px;
       }
     }
 
@@ -477,8 +505,7 @@
   </div>
   <div class="header-right">
     <div class="header-nav">
-      <a href="/" class="active">Home</a>
-      <a href="/dashboard">Dashboard</a>
+      <a href="/">Home</a>
     </div>
     <div class="university-logo">🏛️</div>
     <div>
@@ -491,7 +518,7 @@
 <!-- ===== CONTAINER ===== -->
 <div class="container-custom">
 
-  <!-- ===== STATS CARDS ===== -->
+  <!-- ===== STATS ===== -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon">👥</div>
@@ -515,7 +542,7 @@
     </div>
   </div>
 
-  <!-- ===== SEARCH BAR ===== -->
+  <!-- ===== SEARCH ===== -->
   <div class="search-section">
     <input type="text" class="search-input" id="searchInput"
            placeholder="🔍 Search by name, email or location...">
@@ -539,8 +566,7 @@
         <th>Action</th>
       </tr>
       </thead>
-      <tbody id="resultBody">
-      </tbody>
+      <tbody id="resultBody"></tbody>
     </table>
   </div>
 
@@ -566,7 +592,7 @@
         </div>
         <div th:if="${totalEmployees == 0}">
           <p style="color: #999; text-align: center; padding: 20px 0;">
-            No employees found. Add some employees to see the chart.
+            No employees found.
           </p>
         </div>
       </div>
@@ -594,9 +620,10 @@
             <span class="badge-location" th:text="${emp.location}">NOIDA</span>
           </td>
           <td>
-            <a th:href="@{/location/ + ${emp.location}}"
-               class="btn-view-sm">
-              <i class="fas fa-eye"></i> View
+            <!-- ✅ Recent Employees - Update Button -->
+            <a th:href="@{/showFormForUpdate/{id}(id=${emp.id})}"
+               class="btn-update-sm">
+              <i class="fas fa-edit"></i> Update
             </a>
           </td>
         </tr>
@@ -615,7 +642,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  // ===== SEARCH FUNCTIONALITY =====
+  // ===== SEARCH =====
   const searchInput = document.getElementById('searchInput');
   const searchBtn = document.getElementById('searchBtn');
   const clearBtn = document.getElementById('clearBtn');
@@ -654,6 +681,7 @@
                                     <td>${emp.email}</td>
                                     <td><span class="badge-location">${emp.location}</span></td>
                                     <td>
+                                        <!-- ✅ Search Results - View Button -->
                                         <a href="/location/${emp.location}" class="btn-view-sm">
                                             <i class="fas fa-eye"></i> View
                                         </a>
@@ -671,17 +699,13 @@
     });
   }
 
-  // Search on button click
   searchBtn.addEventListener('click', performSearch);
-
-  // Search on Enter key
   searchInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       performSearch();
     }
   });
 
-  // Clear button
   clearBtn.addEventListener('click', function() {
     searchInput.value = '';
     searchResults.classList.remove('show');
