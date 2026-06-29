@@ -259,8 +259,10 @@
                 <tbody>
                 <tr th:each="leave, iter : ${leaves}">
                     <td th:text="${iter.index + 1}">1</td>
-                    <td th:text="${#dates.format(leave.startDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#dates.format(leave.endDate, 'dd-MM-yyyy')}">05-01-2025</td>
+                    <!-- ✅ Fixed: Start Date -->
+                    <td th:text="${leave.startDate != null ? #temporals.format(leave.startDate, 'dd-MM-yyyy') : '-'}">01-01-2025</td>
+                    <!-- ✅ Fixed: End Date (pehle startDate tha, ab endDate) -->
+                    <td th:text="${leave.endDate != null ? #temporals.format(leave.endDate, 'dd-MM-yyyy') : '-'}">05-01-2025</td>
                     <td><span class="badge badge-secondary" th:text="${leave.leaveType}">CASUAL</span></td>
                     <td th:text="${leave.reason}">Personal</td>
                     <td>

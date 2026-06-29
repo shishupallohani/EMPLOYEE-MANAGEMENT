@@ -273,23 +273,21 @@
                 <tr th:each="leave, iter : ${pendingLeaves}">
                     <td th:text="${iter.index + 1}">1</td>
                     <td>
-                        <strong th:text="${leave.employee.firstName} + ' ' + ${leave.employee.lastName}">Raj Kumar</strong>
+                        <strong th:text="${leave.employee.firstName + ' ' + leave.employee.lastName}">Raj Kumar</strong>
                         <br>
                         <small style="color:#999;" th:text="${leave.employee.location}">NOIDA</small>
                     </td>
-                    <td th:text="${#dates.format(leave.startDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#dates.format(leave.endDate, 'dd-MM-yyyy')}">05-01-2025</td>
+                    <!-- ✅ Fixed Date Format -->
+                    <td th:text="${leave.startDate != null ? #temporals.format(leave.startDate, 'dd-MM-yyyy') : '-'}">01-01-2025</td>
+                    <td th:text="${leave.endDate != null ? #temporals.format(leave.endDate, 'dd-MM-yyyy') : '-'}">05-01-2025</td>
                     <td><span class="badge badge-secondary" th:text="${leave.leaveType}">CASUAL</span></td>
                     <td th:text="${leave.reason}">Personal</td>
+                    <td><span class="badge-pending">⏳ Pending</span></td>
                     <td>
-                        <a th:href="@{/approve-leave/{id}(id=${leave.id})}"
-                           class="btn-approve"
-                           onclick="return confirm('Approve this leave request?')">
+                        <a th:href="@{/approve-leave/{id}(id=${leave.id})}" class="btn-approve" onclick="return confirm('Approve this leave request?')">
                             <i class="fas fa-check"></i> Approve
                         </a>
-                        <a th:href="@{/reject-leave/{id}(id=${leave.id})}"
-                           class="btn-reject"
-                           onclick="return confirm('Reject this leave request?')">
+                        <a th:href="@{/reject-leave/{id}(id=${leave.id})}" class="btn-reject" onclick="return confirm('Reject this leave request?')">
                             <i class="fas fa-times"></i> Reject
                         </a>
                     </td>

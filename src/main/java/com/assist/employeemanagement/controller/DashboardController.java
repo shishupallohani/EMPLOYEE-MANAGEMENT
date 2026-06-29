@@ -46,4 +46,5 @@ public class DashboardController {
     public List<Employee> searchEmployees(@RequestParam("q") String query) {
         return employeeService.searchEmployees(query);
     }
+
 }

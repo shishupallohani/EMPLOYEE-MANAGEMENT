@@ -14,7 +14,7 @@
 			background: linear-gradient(135deg, #e8eaf6, #c5cae9);
 			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 			min-height: 100vh;
-			overflow: hidden; /* ✅ No scroll */
+			overflow: hidden;
 		}
 
 		/* ========== HEADER ========== */
@@ -34,7 +34,6 @@
 			height: 70px;
 		}
 
-		/* ===== TOGGLE BUTTON ===== */
 		.menu-toggle {
 			background: none;
 			border: none;
@@ -252,6 +251,17 @@
 			margin-left: 240px;
 		}
 
+		.main-content::-webkit-scrollbar {
+			width: 4px;
+		}
+		.main-content::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		.main-content::-webkit-scrollbar-thumb {
+			background: #1a237e;
+			border-radius: 4px;
+		}
+
 		/* ===== PAGE TITLE ===== */
 		.page-title {
 			display: flex;
@@ -280,7 +290,7 @@
 			border-radius: 20px;
 		}
 
-		/* ===== LOCATION CARDS ===== */
+		/* ========== LOCATION CARDS - GLASSMORPHISM + GRADIENT BORDER ========== */
 		.location-grid {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -288,30 +298,45 @@
 		}
 
 		.location-card {
-			background: rgba(255, 255, 255, 0.75);
-			backdrop-filter: blur(12px);
-			border-radius: 14px;
-			padding: 20px 18px;
-			box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-			transition: all 0.3s ease;
+			background: rgba(255, 255, 255, 0.15);
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 22px 18px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 			cursor: pointer;
 			position: relative;
 			overflow: hidden;
-			border: 1px solid rgba(255, 255, 255, 0.3);
+			border: 2px solid rgba(255, 255, 255, 0.25);
 		}
 
+		/* Gradient Border */
 		.location-card::before {
 			content: '';
 			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 3px;
-			background: linear-gradient(90deg, #1a237e, #0d47a1);
+			top: -2px;
+			left: -2px;
+			right: -2px;
+			bottom: -2px;
+			background: linear-gradient(135deg, #1a237e, #0d47a1, #1a237e);
+			border-radius: 20px;
+			z-index: -1;
 			opacity: 0;
-			transition: opacity 0.3s ease;
+			transition: opacity 0.5s ease;
 		}
 
+		.location-card:hover::before {
+			opacity: 1;
+		}
+
+		.location-card:hover {
+			transform: translateY(-10px) scale(1.02);
+			box-shadow: 0 20px 60px rgba(26, 35, 126, 0.2);
+			border-color: transparent;
+		}
+
+		/* Location Watermark */
 		.location-card::after {
 			content: attr(data-location);
 			position: absolute;
@@ -325,30 +350,30 @@
 			text-transform: uppercase;
 			letter-spacing: 2px;
 			transform: rotate(-5deg);
-		}
-
-		.location-card:hover {
-			transform: translateY(-6px);
-			box-shadow: 0 12px 40px rgba(26, 35, 126, 0.12);
-			border-color: rgba(26, 35, 126, 0.15);
-			background: rgba(255, 255, 255, 0.9);
-		}
-
-		.location-card:hover::before {
-			opacity: 1;
+			z-index: 0;
 		}
 
 		.location-card .location-icon {
-			font-size: 30px;
+			font-size: 32px;
 			margin-bottom: 8px;
 			position: relative;
 			z-index: 1;
+			display: inline-block;
+			animation: floatIcon 3s ease-in-out infinite;
+		}
+
+		@keyframes floatIcon {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-5px); }
 		}
 
 		.location-card .location-name {
 			font-size: 18px;
 			font-weight: 700;
-			color: #1a237e;
+			background: linear-gradient(135deg, #1a237e, #0d47a1);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
 			margin-bottom: 6px;
 			position: relative;
 			z-index: 1;
@@ -359,21 +384,40 @@
 			align-items: center;
 			gap: 8px;
 			font-size: 14px;
-			color: #4a5568;
+			color: rgba(0, 0, 0, 0.6);
 			position: relative;
 			z-index: 1;
 		}
 
 		.location-card .employee-count .count-number {
 			font-size: 24px;
-			font-weight: 700;
+			font-weight: 800;
 			background: linear-gradient(135deg, #1a237e, #0d47a1);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
 			padding: 0 12px;
 			border-radius: 20px;
-			background-color: rgba(26, 35, 126, 0.08);
+			background-color: rgba(255, 255, 255, 0.3);
+		}
+
+		/* Shine Effect - Override watermark */
+		.location-card::after {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+			pointer-events: none;
+			z-index: 0;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+		}
+
+		.location-card:hover::after {
+			opacity: 1;
 		}
 
 		/* ===== RESPONSIVE ===== */
@@ -429,18 +473,6 @@
 			.location-card .employee-count .count-number { font-size: 18px; }
 			.sidebar { width: 200px; left: -220px; }
 		}
-
-		/* ===== SCROLLBAR STYLING ===== */
-		.main-content::-webkit-scrollbar {
-			width: 4px;
-		}
-		.main-content::-webkit-scrollbar-track {
-			background: transparent;
-		}
-		.main-content::-webkit-scrollbar-thumb {
-			background: #1a237e;
-			border-radius: 4px;
-		}
 	</style>
 </head>
 <body>
@@ -476,22 +508,23 @@
 	<div class="sidebar-divider"></div>
 
 	<div class="sidebar-menu">
-		<!-- Add Employee -->
 		<a th:href="@{/showNewEmployeeForm}" class="sidebar-item">
 			<i class="fas fa-user-plus"></i>
 			<span>Add Employee</span>
 		</a>
-
-		<!-- Dashboard -->
 		<a th:href="@{/dashboard}" class="sidebar-item">
 			<i class="fas fa-chart-pie"></i>
 			<span>Dashboard</span>
 		</a>
-
-		<!-- Leave Management -->
 		<a th:href="@{/my-leaves/1}" class="sidebar-item">
 			<i class="fas fa-umbrella-beach"></i>
 			<span>Leave Management</span>
+		</a>
+
+		<!-- Admin Panel -->
+		<a th:href="@{/admin-dashboard}" class="sidebar-item">
+			<i class="fas fa-user-cog"></i>
+			<span>Admin Panel</span>
 		</a>
 	</div>
 
@@ -670,16 +703,13 @@
 
 <!-- ========== SCRIPTS ========== -->
 <script>
-	// ===== TOGGLE SIDEBAR =====
 	function toggleSidebar() {
 		const sidebar = document.getElementById('sidebar');
 		const mainContent = document.getElementById('mainContent');
-
 		sidebar.classList.toggle('open');
 		mainContent.classList.toggle('shifted');
 	}
 
-	// ===== CLOSE SIDEBAR ON ESC =====
 	document.addEventListener('keydown', function(e) {
 		if (e.key === 'Escape') {
 			const sidebar = document.getElementById('sidebar');
@@ -691,17 +721,6 @@
 		}
 	});
 
-	// ===== CARD CLICK HANDLER =====
-	document.querySelectorAll('.location-card').forEach(card => {
-		card.addEventListener('click', function() {
-			const location = this.getAttribute('data-location') ||
-					this.querySelector('.location-name')?.textContent ||
-					'Unknown';
-			console.log('Location clicked:', location);
-		});
-	});
-
-	// ===== SIDEBAR ITEM ACTIVE =====
 	document.querySelectorAll('.sidebar-item').forEach(item => {
 		item.addEventListener('click', function() {
 			document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));

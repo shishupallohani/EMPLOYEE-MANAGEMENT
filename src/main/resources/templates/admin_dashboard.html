@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Leave Management</title>
+  <link rel="icon" type="image/png" th:href="@{/images/logo.png}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Select2 CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .main-header {
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      color: white;
+      padding: 12px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 65px;
+    }
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 26px;
+      cursor: pointer;
+      padding: 5px 15px;
+      transition: 0.3s;
+    }
+    .menu-toggle:hover { color: #e0e0e0; }
+    .header-left { display: flex; align-items: center; gap: 15px; }
+    .header-left .logo-icon {
+      width: 36px; height: 36px; background: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #1a237e;
+    }
+    .header-left .brand-text { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+    .header-left .brand-sub { font-size: 10px; opacity: 0.8; display: block; font-weight: 300; }
+    .header-right { display: flex; align-items: center; gap: 15px; }
+    .header-right .university-logo {
+      width: 36px; height: 36px; background: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #1a237e;
+    }
+    .header-right .university-text { font-size: 14px; font-weight: 600; }
+    .header-right .university-sub { font-size: 10px; opacity: 0.8; display: block; font-weight: 300; }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 65px;
+      left: -260px;
+      width: 240px;
+      height: calc(100vh - 65px);
+      background: linear-gradient(180deg, #1a237e, #0d47a1);
+      color: white;
+      padding: 20px 0;
+      z-index: 999;
+      transition: all 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    .sidebar-brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 20px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-logo {
+      width: 36px; height: 36px; background: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #1a237e;
+    }
+    .sidebar-brand-text { font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+    .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 10px 20px; }
+    .sidebar-menu { padding: 10px 0; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .sidebar-item:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      text-decoration: none;
+      border-left-color: #fff;
+    }
+    .sidebar-item.active {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border-left-color: #fff;
+    }
+    .sidebar-item i { width: 20px; font-size: 16px; text-align: center; }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 12px;
+      padding: 15px 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: auto;
+    }
+    .sidebar-user-icon {
+      width: 32px; height: 32px; background: rgba(255,255,255,0.15);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .sidebar-user-name { font-weight: 600; font-size: 13px; }
+    .sidebar-user-role { font-size: 10px; opacity: 0.6; }
+
+    /* MAIN CONTENT */
+    .main-content {
+      margin-left: 0;
+      padding: 80px 25px 25px 25px;
+      transition: all 0.3s ease;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .main-content.shifted { margin-left: 240px; }
+    .main-content::-webkit-scrollbar { width: 4px; }
+    .main-content::-webkit-scrollbar-track { background: transparent; }
+    .main-content::-webkit-scrollbar-thumb { background: #1a237e; border-radius: 4px; }
+
+    /* ADMIN CARDS */
+    .admin-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(255,255,255,0.3);
+      margin-bottom: 25px;
+    }
+    .admin-card .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a237e;
+      margin-bottom: 15px;
+    }
+    .admin-card .card-title i { color: #0d47a1; margin-right: 10px; }
+
+    /* Employee Select */
+    .employee-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.8);
+      transition: 0.3s;
+    }
+    .employee-select:focus {
+      border-color: #1a237e;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.1);
+    }
+
+    /* Balance */
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .balance-item {
+      background: rgba(255,255,255,0.5);
+      border-radius: 12px;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .balance-item .num {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a237e;
+    }
+    .balance-item .label {
+      font-size: 13px;
+      color: #4a5568;
+      font-weight: 600;
+    }
+    .balance-item:nth-child(1) .num { color: #1a237e; }
+    .balance-item:nth-child(2) .num { color: #dc3545; }
+    .balance-item:nth-child(3) .num { color: #28a745; }
+
+    /* Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .btn-action {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, #1a237e, #0d47a1); color: white; }
+    .btn-primary:hover { box-shadow: 0 8px 25px rgba(26,35,126,0.3); }
+    .btn-success { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+    .btn-success:hover { box-shadow: 0 8px 25px rgba(40,167,69,0.3); }
+    .btn-warning { background: linear-gradient(135deg, #ffc107, #e0a800); color: #333; }
+    .btn-warning:hover { box-shadow: 0 8px 25px rgba(255,193,7,0.3); }
+
+    /* Table */
+    .request-table {
+      width: 100%;
+      font-size: 13px;
+    }
+    .request-table th {
+      text-align: left;
+      padding: 10px 8px;
+      color: #4a5568;
+      border-bottom: 2px solid #e8eaf6;
+      font-weight: 700;
+    }
+    .request-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .request-table tr:hover td { background: rgba(0,0,0,0.02); }
+    .badge-pending {
+      background: #ffc107; color: #333;
+      padding: 3px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+    }
+    .btn-approve {
+      background: #28a745; color: white;
+      border: none; padding: 4px 14px;
+      border-radius: 6px; font-size: 12px;
+      font-weight: 600; cursor: pointer;
+      transition: 0.3s; text-decoration: none;
+    }
+    .btn-approve:hover { background: #218838; color: white; }
+    .btn-reject {
+      background: #dc3545; color: white;
+      border: none; padding: 4px 14px;
+      border-radius: 6px; font-size: 12px;
+      font-weight: 600; cursor: pointer;
+      transition: 0.3s; text-decoration: none;
+      margin-left: 5px;
+    }
+    .btn-reject:hover { background: #c82333; color: white; }
+
+    .employee-name-display {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a237e;
+      margin-top: 5px;
+    }
+    .employee-location-display {
+      font-size: 14px;
+      color: #4a5568;
+    }
+
+    /* Select2 Override */
+    .select2-container--default .select2-selection--single {
+      border: 2px solid #e2e8f0 !important;
+      border-radius: 10px !important;
+      height: 48px !important;
+      padding: 5px !important;
+      background: rgba(255,255,255,0.8) !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      line-height: 36px !important;
+      font-size: 15px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 44px !important;
+    }
+
+    @media (max-width: 768px) {
+      .main-header { padding: 10px 15px; height: 60px; }
+      .header-left .brand-text { font-size: 16px; }
+      .header-left .brand-sub { display: none; }
+      .header-right .university-text { font-size: 12px; }
+      .sidebar { width: 220px; left: -240px; top: 60px; height: calc(100vh - 60px); }
+      .sidebar.open { left: 0; }
+      .main-content { padding: 75px 15px 15px 15px; }
+      .main-content.shifted { margin-left: 0; }
+      .balance-grid { grid-template-columns: 1fr 1fr; }
+      .action-buttons { flex-direction: column; }
+      .btn-action { width: 100%; justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      .balance-grid { grid-template-columns: 1fr; }
+      .sidebar { width: 200px; left: -220px; }
+    }
+
+    /* ===== CONFIRM MODAL ===== */
+    .confirm-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+    .confirm-modal-overlay.active {
+      display: flex;
+    }
+    .confirm-modal-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 45px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s ease;
+    }
+    .confirm-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px auto;
+      font-size: 32px;
+    }
+    .confirm-icon.approve {
+      background: #d4edda;
+      color: #28a745;
+    }
+    .confirm-icon.reject {
+      background: #f8d7da;
+      color: #dc3545;
+    }
+    .confirm-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+    .confirm-message {
+      color: #4a5568;
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+    .confirm-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .confirm-btn-cancel {
+      padding: 10px 24px;
+      background: #e2e8f0;
+      color: #4a5568;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .confirm-btn-cancel:hover {
+      background: #cbd5e0;
+    }
+    .confirm-btn-confirm {
+      padding: 10px 24px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .confirm-btn-confirm:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+    .confirm-btn-confirm.reject {
+      background: #dc3545;
+    }
+    .confirm-btn-confirm.reject:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="main-header">
+  <div class="header-left">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="logo-icon">👥</div>
+    <div>
+      <span class="brand-text">Employee Management</span>
+      <span class="brand-sub">Admin Panel</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="university-logo">🏛️</div>
+    <div>
+      <span class="university-text">Chandigarh University</span>
+      <span class="university-sub">Department of Computer Science</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">👥</div>
+    <div class="sidebar-brand-text">EMS</div>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-menu">
+    <a th:href="@{/showNewEmployeeForm}" class="sidebar-item">
+      <i class="fas fa-user-plus"></i> <span>Add Employee</span>
+    </a>
+    <a th:href="@{/dashboard}" class="sidebar-item">
+      <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
+    </a>
+    <a th:href="@{/admin-dashboard}" class="sidebar-item active">
+      <i class="fas fa-user-cog"></i> <span>Admin Panel</span>
+    </a>
+    <a th:href="@{/my-leaves/1}" class="sidebar-item">
+      <i class="fas fa-umbrella-beach"></i> <span>My Leaves</span>
+    </a>
+    <a th:href="@{/leave-requests}" class="sidebar-item">
+      <i class="fas fa-list-check"></i> <span>Leave Requests</span>
+    </a>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-user">
+    <div class="sidebar-user-icon">👤</div>
+    <div>
+      <div class="sidebar-user-name">Admin</div>
+      <div class="sidebar-user-role">Chandigarh University</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content" id="mainContent">
+
+  <!-- ===== PAGE TITLE ===== -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="color: #1a237e; font-weight: 700; font-size: 24px;">
+      <i class="fas fa-user-cog" style="color: #0d47a1;"></i> Admin Panel
+    </h2>
+    <a href="/" style="color: #1a237e; text-decoration: none; font-weight: 600; font-size: 14px; background: rgba(255,255,255,0.5); padding: 6px 16px; border-radius: 8px;">
+      <i class="fas fa-arrow-left"></i> Home
+    </a>
+  </div>
+
+  <!-- ===== EMPLOYEE SELECTION ===== -->
+  <div class="admin-card">
+    <div class="card-title">
+      <i class="fas fa-user"></i> Select Employee
+    </div>
+    <select class="employee-select" id="employeeSelect" onchange="loadEmployeeData()" style="width: 100%;">
+      <option value="">-- Select Employee --</option>
+      <option th:each="emp : ${employees}" th:value="${emp.id}"
+              th:text="${emp.firstName} + ' ' + ${emp.lastName} + ' (' + ${emp.email} + ') - ' + ${emp.location}">
+      </option>
+    </select>
+    <div id="employeeDetails" style="margin-top: 15px; display: none;">
+      <div class="employee-name-display" id="empName">Shishupal Lohani</div>
+      <div class="employee-location-display" id="empLocation">📍 NOIDA</div>
+      <div class="balance-grid" id="balanceGrid">
+        <div class="balance-item">
+          <div class="num" id="totalLeaves">12</div>
+          <div class="label">Total Leaves</div>
+        </div>
+        <div class="balance-item">
+          <div class="num" id="usedLeaves">0</div>
+          <div class="label">Used Leaves</div>
+        </div>
+        <div class="balance-item">
+          <div class="num" id="remainingLeaves">12</div>
+          <div class="label">Remaining Leaves</div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <a href="#" class="btn-action btn-primary" id="applyLeaveBtn">
+          <i class="fas fa-plus-circle"></i> Apply Leave
+        </a>
+        <a href="#" class="btn-action btn-success" id="myLeavesBtn">
+          <i class="fas fa-eye"></i> View Leaves
+        </a>
+        <a href="/leave-requests" class="btn-action btn-warning">
+          <i class="fas fa-list-check"></i> Leave Requests
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RECENT LEAVE REQUESTS ===== -->
+  <div class="admin-card">
+    <div class="card-title">
+      <i class="fas fa-clock"></i> Recent Leave Requests
+      <span style="font-size: 13px; font-weight: 400; color: #4a5568; margin-left: 10px;">
+                (Pending: <span id="pendingCount">0</span>)
+            </span>
+    </div>
+    <div id="recentRequests">
+      <table class="request-table">
+        <thead>
+        <tr>
+          <th>Employee</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="requestTableBody">
+        <tr>
+          <td colspan="6" style="text-align: center; color: #999; padding: 20px 0;">
+            <i class="fas fa-spinner fa-spin"></i> Loading...
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== CONFIRM MODAL (Approve/Reject) ===== -->
+<div class="confirm-modal-overlay" id="confirmModal">
+  <div class="confirm-modal-box">
+    <div class="confirm-icon" id="confirmIcon">
+      <i class="fas fa-question-circle"></i>
+    </div>
+    <h3 class="confirm-title" id="confirmTitle">Confirm Action</h3>
+    <p class="confirm-message" id="confirmMessage">Are you sure you want to perform this action?</p>
+    <div class="confirm-buttons">
+      <button class="confirm-btn-cancel" onclick="closeConfirmModal()">
+        <i class="fas fa-times"></i> Cancel
+      </button>
+      <button class="confirm-btn-confirm" id="confirmActionBtn">
+        <i class="fas fa-check"></i> Confirm
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+  // ===== TOGGLE SIDEBAR =====
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    sidebar.classList.toggle('open');
+    mainContent.classList.toggle('shifted');
+  }
+
+  // ===== SELECT2 INIT =====
+  $(document).ready(function() {
+    $('#employeeSelect').select2({
+      placeholder: "Search by name, email or location...",
+      allowClear: true,
+      width: '100%'
+    });
+    loadRecentRequests();
+  });
+
+  // ===== LOAD EMPLOYEE DATA =====
+  function loadEmployeeData() {
+    const empId = document.getElementById('employeeSelect').value;
+    if (!empId) {
+      document.getElementById('employeeDetails').style.display = 'none';
+      return;
+    }
+
+    $.ajax({
+      url: '/api/employee/' + empId,
+      type: 'GET',
+      success: function(data) {
+        document.getElementById('employeeDetails').style.display = 'block';
+        document.getElementById('empName').textContent = data.firstName + ' ' + data.lastName;
+        document.getElementById('empLocation').textContent = '📍 ' + data.location;
+        document.getElementById('totalLeaves').textContent = data.totalLeaves || 12;
+        document.getElementById('usedLeaves').textContent = data.usedLeaves || 0;
+        document.getElementById('remainingLeaves').textContent = data.remainingLeaves || 12;
+
+        document.getElementById('applyLeaveBtn').href = '/apply-leave/' + empId;
+        document.getElementById('myLeavesBtn').href = '/my-leaves/' + empId;
+      },
+      error: function() {
+        alert('Error loading employee data!');
+      }
+    });
+  }
+
+  // ===== LOAD RECENT REQUESTS =====
+  function loadRecentRequests() {
+    $.ajax({
+      url: '/api/leave-requests/recent',
+      type: 'GET',
+      success: function(data) {
+        const tbody = document.getElementById('requestTableBody');
+        const pendingCount = document.getElementById('pendingCount');
+
+        if (!data || data.length === 0) {
+          tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #999; padding: 20px 0;">
+                                <i class="fas fa-check-circle" style="color: #28a745;"></i> No pending requests
+                            </td>
+                        </tr>
+                    `;
+          pendingCount.textContent = '0';
+          return;
+        }
+
+        let html = '';
+        let count = 0;
+        data.forEach(function(leave) {
+          if (leave.status === 'PENDING') count++;
+          const emp = leave.employee || {};
+          html += `
+                        <tr>
+                            <td><strong>${emp.firstName || 'N/A'} ${emp.lastName || ''}</strong></td>
+                            <td>${leave.startDate || '-'}</td>
+                            <td>${leave.endDate || '-'}</td>
+                            <td><span class="badge badge-secondary">${leave.leaveType || '-'}</span></td>
+                            <td><span class="badge-pending">⏳ ${leave.status || 'PENDING'}</span></td>
+                            <td>
+                                <td>
+    <a href="javascript:void(0)" class="btn-approve"
+       onclick="openConfirmModal('/approve-leave/${leave.id}', 'approve')">
+        <i class="fas fa-check"></i> Approve
+    </a>
+    <a href="javascript:void(0)" class="btn-reject"
+       onclick="openConfirmModal('/reject-leave/${leave.id}', 'reject')">
+        <i class="fas fa-times"></i> Reject
+    </a>
+</td>
+                            </td>
+                        </tr>
+                    `;
+        });
+        tbody.innerHTML = html;
+        pendingCount.textContent = count;
+      },
+      error: function(xhr) {
+        console.error('Error loading requests:', xhr);
+        document.getElementById('requestTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #999; padding: 20px 0;">
+                            <i class="fas fa-exclamation-circle"></i> Error loading requests
+                        </td>
+                    </tr>
+                `;
+      }
+    });
+  }
+
+  // ===== SIDEBAR ITEM ACTIVE =====
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ===== CONFIRM MODAL =====
+  let confirmActionUrl = '';
+  let confirmActionType = '';
+
+  function openConfirmModal(actionUrl, type) {
+    confirmActionUrl = actionUrl;
+    confirmActionType = type;
+
+    const modal = document.getElementById('confirmModal');
+    const icon = document.getElementById('confirmIcon');
+    const title = document.getElementById('confirmTitle');
+    const message = document.getElementById('confirmMessage');
+    const btn = document.getElementById('confirmActionBtn');
+
+    if (type === 'approve') {
+      icon.className = 'confirm-icon approve';
+      icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+      title.textContent = 'Approve Leave';
+      message.textContent = 'Are you sure you want to approve this leave request?';
+      btn.className = 'confirm-btn-confirm';
+      btn.innerHTML = '<i class="fas fa-check"></i> Approve';
+    } else {
+      icon.className = 'confirm-icon reject';
+      icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+      title.textContent = 'Reject Leave';
+      message.textContent = 'Are you sure you want to reject this leave request?';
+      btn.className = 'confirm-btn-confirm reject';
+      btn.innerHTML = '<i class="fas fa-times"></i> Reject';
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    confirmActionUrl = '';
+  }
+
+  // Confirm Action
+  document.getElementById('confirmActionBtn').addEventListener('click', function() {
+    if (confirmActionUrl) {
+      window.location.href = confirmActionUrl;
+    }
+  });
+
+  // Close on outside click
+  document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeConfirmModal();
+    }
+  });
+
+  // Close on ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeConfirmModal();
+    }
+  });
+</script>
+
+</body>
+</html>
